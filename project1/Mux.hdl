@@ -1,0 +1,30 @@
+/** 
+ * Multiplexor:
+ * if (sel = 0) out = a, else out = b
+ * nota and b and sel or
+ * a and notb and notsel or
+ * a and b and notsel or
+ * a and b and sel
+
+ * imp simplified abit:
+ * nota and b and sel or
+ * a and notb and notsel or
+ * a and b
+ */
+ 
+CHIP Mux {
+    IN a, b, sel;
+    OUT out;
+
+    PARTS:
+    Not(in=a , out=nota );
+    Not(in=b , out=notb );
+    Not(in=sel , out=notsel );
+    And(a=nota , b=b , out=notaandb );
+    And(a=notaandb , b=sel , out=notaandbandsel );
+    And(a=a , b=notb , out=aandnotb );
+    And(a=aandnotb , b=notsel , out=aandnotbandnotsel );
+    And(a=a , b=b , out=aandb );
+    Or(a=notaandbandsel , b=aandnotbandnotsel , out=temp );
+    Or(a=temp , b=aandb , out=out );
+}
