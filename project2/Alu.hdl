@@ -1,0 +1,32 @@
+CHIP ALU {
+    IN  
+        x[16], y[16],  // 16-bit inputs        
+        zx, // zero the x input?
+        nx, // negate the x input?
+        zy, // zero the y input?
+        ny, // negate the y input?
+        f,  // compute (out = x + y) or (out = x & y)?
+        no; // negate the out output?
+    OUT 
+        out[16], // 16-bit output
+        zr,      // if (out == 0) equals 1, else 0
+        ng;      // if (out < 0)  equals 1, else 0
+
+    PARTS:
+    Mux16(a=x , b=false , sel=zx , out=xz );
+    Not16(in=xz , out=xzntemp );
+    Mux16(a=xz , b=xzntemp , sel=nx , out=xzn );
+    Mux16(a=y , b=false , sel=zy , out=yz );
+    Not16(in=yz , out=yzntemp );
+    Mux16(a=yz , b=yzntemp , sel=ny , out=yzn );
+    Add16(a=xzn , b=yzn , out=added );
+    And16(a=xzn , b=yzn , out=anded );
+    Mux16(a=anded , b=added , sel=f , out=outtemp );
+    Not16(in=outtemp , out=outn );
+    Mux16(a=outtemp , b=outn , sel=no ,out[0..7]=lowbits, out[8..15]=highbits,out[15]=msb, out=outfinal );
+    And16(a=outfinal , b=true , out=out );
+    Or8Way(in=lowbits , out=islowbits );
+    Or8Way(in=lowbits , out=ishighbits );
+    Nand(a=islowbits , b=ishighbits , out=zr );
+    And(a=msb , b=true , out=ng );
+}
