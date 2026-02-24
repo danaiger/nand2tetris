@@ -1,0 +1,89 @@
+// n==24757
+// i = 0
+@24575
+D=A
+@n
+M=D
+
+(LISTENPRESS)
+@SCREEN
+D=A
+@addr
+M=D
+@KBD
+D=M
+@LISTENPRESS
+D;JEQ
+@LOOPFILL
+0;JMP
+
+
+
+//LOOPFILL:
+//if addr>n GOTO LISTENRELEASE
+//  RAM[addr]=-1
+//  addr = addr + 1 
+//    GOTO LOOPFILL
+
+(LOOPFILL)
+@addr
+D=M
+@n
+D=D-M
+@LISTENRELEASE
+D;JGT
+@addr
+A=M
+M=-1
+@addr
+M=M+1
+@LOOPFILL
+0;JMP
+
+
+//LOOPCLEAR:
+// if addr>n GOTO LISTENPRESS
+//  RAM[addr]=0
+//  addr = addr + 1 
+//  GOTO LOOPCLEAR
+
+(LOOPCLEAR)
+@addr
+D=M
+@n
+D=D-M
+@LISTENPRESS
+D;JGT
+@addr
+A=M
+M=0
+@addr
+M=M+1
+@LOOPCLEAR
+0;JMP
+
+
+//LISTENPRESS:
+//    addr=SCREEN
+//    if RAM[KBD]==0 GOTO LISTENPRESS
+//   GOTO LOOPFILL
+
+//LISTENRELEASE:
+//    addr=SCREEN
+//    if RAM[KBD]!=0 GOTO LISTENRELEASE
+//    GOTO LOOPCLEAR
+
+(LISTENRELEASE)
+@SCREEN
+D=A
+@addr
+M=D
+@KBD
+D=M
+@LISTENRELEASE
+D;JNE
+@LOOPCLEAR
+0;JMP
+
+
+
