@@ -1,0 +1,15 @@
+CHIP Memory {
+    IN in[16], load, address[15];
+    OUT out[16];
+
+    PARTS:
+    Not(in=address[14] , out=isRamAddress );
+    And(a=address[14] , b=address[13] , out=isKeyboard );
+    Not(in=address[13] , out=bit13Off );
+    And(a=bit13Off , b=address[14] , out=isScreen );
+    And(a=load , b=isRamAddress , out=loadToRam );
+    RAM16K(in=in , load=loadToRam , address=address[0..13] , out=ramOut );
+    Screen(in=in , load=isScreen , address=address[0..12] , out=screenOut );
+    Keyboard(out=keyboardout );
+    Mux4Way16(a=ramOut , b=ramOut , c=screenOut , d= keyboardout, sel[0]=isKeyboard , sel[1]=address[14], out=out );
+}
