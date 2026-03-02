@@ -110,3 +110,11 @@ def test_assemble_predefined_symbol(tmp_path):
     assemble(asm_file)
     result = (tmp_path / "predefined.hack").read_text()
     assert result == "0000000000000000"
+
+
+def test_assemble_label_symbol(tmp_path):
+    asm_file = tmp_path / "label.asm"
+    asm_file.write_text("(LOOP)\n@LOOP\n0;JMP\n")
+    assemble(asm_file)
+    result = (tmp_path / "label.hack").read_text()
+    assert result == "0000000000000000\n1110101010000111"
