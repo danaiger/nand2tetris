@@ -64,6 +64,11 @@ def test_parse_inline_comment_is_stripped():
     assert result.number == 42
 
 
+def test_parse_label_instruction():
+    result = parse("(LOOP)")
+    assert result.label == "LOOP"
+
+
 def test_code_a_instruction():
     instruction = parse("@42")
     assert code(instruction) == "0000000000101010"
