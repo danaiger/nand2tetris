@@ -70,3 +70,15 @@ def test_code_a_instruction():
 def test_code_c_instruction():
     instruction = parse("D=D+A;JGT")
     assert code(instruction) == "1110000010010001"
+
+
+TEST_DATA = Path(__file__).parent / "test_data"
+
+
+def test_assemble_add(tmp_path):
+    import shutil
+    shutil.copy(TEST_DATA / "Add.asm", tmp_path / "Add.asm")
+    assemble(tmp_path / "Add.asm")
+    result = (tmp_path / "Add.hack").read_text()
+    expected = (TEST_DATA / "expected_Add.hack").read_text()
+    assert result == expected
