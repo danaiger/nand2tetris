@@ -25,3 +25,8 @@ def test_c_instruction_without_jump():
     assert result.dest == "D"
     assert result.comp == "A"
     assert result.jump is None
+
+
+def test_parse_ignores_whitespace():
+    result = parse("  @42  ")
+    assert result.number == 42
