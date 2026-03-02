@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class AInstruction:
-    number: int
+    value: int | str
 
 
 @dataclass
@@ -19,7 +19,11 @@ class LabelInstruction:
 
 
 def parse_a_instruction(line: str) -> AInstruction:
-    return AInstruction(number=int(line[1:]))
+    rest = line[1:]
+    try:
+        return AInstruction(value=int(rest))
+    except ValueError:
+        return AInstruction(value=rest)
 
 
 def parse_c_instruction(line: str) -> CInstruction:

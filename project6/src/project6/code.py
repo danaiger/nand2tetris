@@ -56,7 +56,7 @@ JUMP_TABLE = {
 
 def code(instruction: AInstruction | CInstruction) -> str:
     if isinstance(instruction, AInstruction):
-        return f"{instruction.number:016b}"
+        return f"{instruction.value:016b}"
     return (
         "111"
         + COMP_TABLE[instruction.comp]

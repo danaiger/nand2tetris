@@ -16,9 +16,14 @@ def test_assemble_empty_file(tmp_path):
     assert hack_file.read_text() == ""
 
 
-def test_a_instruction_stores_number():
+def test_a_instruction_with_number_stores_int():
     result = parse("@42")
-    assert result.number == 42
+    assert result.value == 42
+
+
+def test_a_instruction_with_symbol_stores_str():
+    result = parse("@R0")
+    assert result.value == "R0"
 
 
 def test_c_instruction_stores_dest_comp_jump():
@@ -44,7 +49,7 @@ def test_c_instruction_without_jump():
 
 def test_parse_ignores_whitespace():
     result = parse("  @42  ")
-    assert result.number == 42
+    assert result.value == 42
 
 
 def test_parse_empty_line_returns_none():
@@ -61,7 +66,7 @@ def test_parse_comment_line_returns_none():
 
 def test_parse_inline_comment_is_stripped():
     result = parse("@42 // load 42")
-    assert result.number == 42
+    assert result.value == 42
 
 
 def test_parse_label_instruction():
