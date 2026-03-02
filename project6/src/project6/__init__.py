@@ -31,6 +31,11 @@ def parse_c_instruction(line: str) -> CInstruction:
     return CInstruction(dest=dest, comp=comp, jump=jump)
 
 
+def code(instruction: AInstruction | CInstruction) -> str:
+    if isinstance(instruction, AInstruction):
+        return f"{instruction.number:016b}"
+
+
 def parse(line: str) -> AInstruction | CInstruction | None:
     line = line.split("//")[0].strip()
     if not line:

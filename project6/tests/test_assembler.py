@@ -1,4 +1,4 @@
-from project6 import parse
+from project6 import code, parse
 
 
 def test_a_instruction_stores_number():
@@ -47,3 +47,8 @@ def test_parse_comment_line_returns_none():
 def test_parse_inline_comment_is_stripped():
     result = parse("@42 // load 42")
     assert result.number == 42
+
+
+def test_code_a_instruction():
+    instruction = parse("@42")
+    assert code(instruction) == "0000000000101010"
