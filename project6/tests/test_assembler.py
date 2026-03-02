@@ -38,3 +38,12 @@ def test_parse_empty_line_returns_none():
 
 def test_parse_whitespace_only_returns_none():
     assert parse("   ") is None
+
+
+def test_parse_comment_line_returns_none():
+    assert parse("// this is a comment") is None
+
+
+def test_parse_inline_comment_is_stripped():
+    result = parse("@42 // load 42")
+    assert result.number == 42

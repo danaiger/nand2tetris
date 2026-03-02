@@ -32,7 +32,7 @@ def parse_c_instruction(line: str) -> CInstruction:
 
 
 def parse(line: str) -> AInstruction | CInstruction | None:
-    line = line.strip()
+    line = line.split("//")[0].strip()
     if not line:
         return None
     if line.startswith("@"):
