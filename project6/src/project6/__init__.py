@@ -10,7 +10,7 @@ class AInstruction:
 class CInstruction:
     dest: str | None
     comp: str
-    jump: str
+    jump: str | None
 
 
 def parse(line: str) -> AInstruction | CInstruction:
@@ -21,7 +21,11 @@ def parse(line: str) -> AInstruction | CInstruction:
     else:
         dest = None
         rest = line
-    comp, jump = rest.split(";")
+    if ";" in rest:
+        comp, jump = rest.split(";")
+    else:
+        comp = rest
+        jump = None
     return CInstruction(dest=dest, comp=comp, jump=jump)
 
 

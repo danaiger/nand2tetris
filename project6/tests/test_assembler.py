@@ -18,3 +18,10 @@ def test_c_instruction_without_dest():
     assert result.dest is None
     assert result.comp == "0"
     assert result.jump == "JMP"
+
+
+def test_c_instruction_without_jump():
+    result = parse("D=A")
+    assert result.dest == "D"
+    assert result.comp == "A"
+    assert result.jump is None
