@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 import pytest
@@ -77,8 +78,6 @@ TEST_DATA = Path(__file__).parent / "test_data"
 
 
 def test_assemble_add(tmp_path):
-    import shutil
-
     shutil.copy(TEST_DATA / "Add.asm", tmp_path / "Add.asm")
     assemble(tmp_path / "Add.asm")
     result = (tmp_path / "Add.hack").read_text()
@@ -88,8 +87,6 @@ def test_assemble_add(tmp_path):
 
 @pytest.mark.parametrize("name", ["Max", "Rect", "Pong"])
 def test_assemble_symbolless(tmp_path, name):
-    import shutil
-
     shutil.copy(TEST_DATA / f"{name}L.asm", tmp_path / f"{name}L.asm")
     assemble(tmp_path / f"{name}L.asm")
     result = (tmp_path / f"{name}L.hack").read_text()
