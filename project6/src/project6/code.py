@@ -1,15 +1,15 @@
 from project6.parser import AInstruction, CInstruction
 
 COMP_TABLE = {
-    "0":   "0101010",
-    "1":   "0111111",
-    "-1":  "0111010",
-    "D":   "0001100",
-    "A":   "0110000",
-    "!D":  "0001101",
-    "!A":  "0110001",
-    "-D":  "0001111",
-    "-A":  "0110011",
+    "0": "0101010",
+    "1": "0111111",
+    "-1": "0111010",
+    "D": "0001100",
+    "A": "0110000",
+    "!D": "0001101",
+    "!A": "0110001",
+    "-D": "0001111",
+    "-A": "0110011",
     "D+1": "0011111",
     "A+1": "0110111",
     "D-1": "0001110",
@@ -19,9 +19,9 @@ COMP_TABLE = {
     "A-D": "0000111",
     "D&A": "0000000",
     "D|A": "0010101",
-    "M":   "1110000",
-    "!M":  "1110001",
-    "-M":  "1110011",
+    "M": "1110000",
+    "!M": "1110001",
+    "-M": "1110011",
     "M+1": "1110111",
     "M-1": "1110010",
     "D+M": "1000010",
@@ -32,18 +32,18 @@ COMP_TABLE = {
 }
 
 DEST_TABLE = {
-    None:  "000",
-    "M":   "001",
-    "D":   "010",
-    "MD":  "011",
-    "A":   "100",
-    "AM":  "101",
-    "AD":  "110",
+    None: "000",
+    "M": "001",
+    "D": "010",
+    "MD": "011",
+    "A": "100",
+    "AM": "101",
+    "AD": "110",
     "AMD": "111",
 }
 
 JUMP_TABLE = {
-    None:  "000",
+    None: "000",
     "JGT": "001",
     "JEQ": "010",
     "JGE": "011",
@@ -57,4 +57,9 @@ JUMP_TABLE = {
 def code(instruction: AInstruction | CInstruction) -> str:
     if isinstance(instruction, AInstruction):
         return f"{instruction.number:016b}"
-    return "111" + COMP_TABLE[instruction.comp] + DEST_TABLE[instruction.dest] + JUMP_TABLE[instruction.jump]
+    return (
+        "111"
+        + COMP_TABLE[instruction.comp]
+        + DEST_TABLE[instruction.dest]
+        + JUMP_TABLE[instruction.jump]
+    )
