@@ -31,8 +31,10 @@ def parse_c_instruction(line: str) -> CInstruction:
     return CInstruction(dest=dest, comp=comp, jump=jump)
 
 
-def parse(line: str) -> AInstruction | CInstruction:
+def parse(line: str) -> AInstruction | CInstruction | None:
     line = line.strip()
+    if not line:
+        return None
     if line.startswith("@"):
         return parse_a_instruction(line)
     return parse_c_instruction(line)

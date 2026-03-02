@@ -30,3 +30,11 @@ def test_c_instruction_without_jump():
 def test_parse_ignores_whitespace():
     result = parse("  @42  ")
     assert result.number == 42
+
+
+def test_parse_empty_line_returns_none():
+    assert parse("") is None
+
+
+def test_parse_whitespace_only_returns_none():
+    assert parse("   ") is None
