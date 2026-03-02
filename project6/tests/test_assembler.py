@@ -102,3 +102,11 @@ def test_assemble_symbolless(tmp_path, name):
     result = (tmp_path / f"{name}L.hack").read_text()
     expected = (TEST_DATA / f"expected_{name}.hack").read_text()
     assert result == expected
+
+
+def test_assemble_predefined_symbol(tmp_path):
+    asm_file = tmp_path / "predefined.asm"
+    asm_file.write_text("@R0\n")
+    assemble(asm_file)
+    result = (tmp_path / "predefined.hack").read_text()
+    assert result == "0000000000000000"
