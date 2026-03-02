@@ -52,3 +52,8 @@ def test_parse_inline_comment_is_stripped():
 def test_code_a_instruction():
     instruction = parse("@42")
     assert code(instruction) == "0000000000101010"
+
+
+def test_code_c_instruction():
+    instruction = parse("D=D+A;JGT")
+    assert code(instruction) == "1110000010010001"
