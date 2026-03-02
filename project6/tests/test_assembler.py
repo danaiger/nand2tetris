@@ -1,5 +1,17 @@
+import tempfile
+from pathlib import Path
+
+from project6.assembler import assemble
 from project6.code import code
 from project6.parser import parse
+
+
+def test_assemble_empty_file(tmp_path):
+    asm_file = tmp_path / "empty.asm"
+    asm_file.write_text("")
+    assemble(asm_file)
+    hack_file = tmp_path / "empty.hack"
+    assert hack_file.read_text() == ""
 
 
 def test_a_instruction_stores_number():
