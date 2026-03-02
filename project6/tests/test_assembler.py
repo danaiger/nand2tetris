@@ -118,3 +118,11 @@ def test_assemble_label_symbol(tmp_path):
     assemble(asm_file)
     result = (tmp_path / "label.hack").read_text()
     assert result == "0000000000000000\n1110101010000111"
+
+
+def test_assemble_variable_symbol(tmp_path):
+    asm_file = tmp_path / "variable.asm"
+    asm_file.write_text("@foo\n")
+    assemble(asm_file)
+    result = (tmp_path / "variable.hack").read_text()
+    assert result == "0000000000010000"
