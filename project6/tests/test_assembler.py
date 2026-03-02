@@ -11,3 +11,10 @@ def test_c_instruction_stores_dest_comp_jump():
     assert result.dest == "D"
     assert result.comp == "A"
     assert result.jump == "JMP"
+
+
+def test_c_instruction_without_dest():
+    result = parse("0;JMP")
+    assert result.dest is None
+    assert result.comp == "0"
+    assert result.jump == "JMP"

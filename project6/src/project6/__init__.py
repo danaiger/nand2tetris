@@ -8,7 +8,7 @@ class AInstruction:
 
 @dataclass
 class CInstruction:
-    dest: str
+    dest: str | None
     comp: str
     jump: str
 
@@ -16,7 +16,11 @@ class CInstruction:
 def parse(line: str) -> AInstruction | CInstruction:
     if line.startswith("@"):
         return AInstruction(number=int(line[1:]))
-    dest, rest = line.split("=")
+    if "=" in line:
+        dest, rest = line.split("=")
+    else:
+        dest = None
+        rest = line
     comp, jump = rest.split(";")
     return CInstruction(dest=dest, comp=comp, jump=jump)
 
