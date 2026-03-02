@@ -126,3 +126,12 @@ def test_assemble_variable_symbol(tmp_path):
     assemble(asm_file)
     result = (tmp_path / "variable.hack").read_text()
     assert result == "0000000000010000"
+
+
+@pytest.mark.parametrize("name", ["Max", "Rect", "Pong"])
+def test_assemble_with_symbols(tmp_path, name):
+    shutil.copy(TEST_DATA / f"{name}.asm", tmp_path / f"{name}.asm")
+    assemble(tmp_path / f"{name}.asm")
+    result = (tmp_path / f"{name}.hack").read_text()
+    expected = (TEST_DATA / f"expected_{name}.hack").read_text()
+    assert result == expected
