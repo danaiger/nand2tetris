@@ -1,5 +1,6 @@
-import tempfile
 from pathlib import Path
+
+import pytest
 
 from project6.assembler import assemble
 from project6.code import code
@@ -81,4 +82,14 @@ def test_assemble_add(tmp_path):
     assemble(tmp_path / "Add.asm")
     result = (tmp_path / "Add.hack").read_text()
     expected = (TEST_DATA / "expected_Add.hack").read_text()
+    assert result == expected
+
+
+@pytest.mark.parametrize("name", ["Max", "Rect", "Pong"])
+def test_assemble_symbolless(tmp_path, name):
+    import shutil
+    shutil.copy(TEST_DATA / f"{name}L.asm", tmp_path / f"{name}L.asm")
+    assemble(tmp_path / f"{name}L.asm")
+    result = (tmp_path / f"{name}L.hack").read_text()
+    expected = (TEST_DATA / f"expected_{name}.hack").read_text()
     assert result == expected
