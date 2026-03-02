@@ -1,4 +1,5 @@
-from project6 import code, parse
+from project6.code import code
+from project6.parser import parse
 
 
 def test_a_instruction_stores_number():
