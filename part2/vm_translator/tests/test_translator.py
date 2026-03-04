@@ -1,4 +1,6 @@
-from vm_translator.translate import translate_line
+import shutil
+from pathlib import Path
+from vm_translator.translate import translate, translate_line
 
 
 def test_push_constant_i():
@@ -43,3 +45,13 @@ A=M
 M=D
 @SP
 M=M+1"""
+
+TEST_DATA = Path(__file__).parent / "test_data"
+
+def test_simple_add_vm_file(tmp_path):
+    name="SimpleAdd"
+    shutil.copy(TEST_DATA / f"{name}.vm", tmp_path / f"{name}.vm")
+    translate(tmp_path / f"{name}.vm")
+    result = (tmp_path / f"{name}.asm").read_text()
+    expected = (TEST_DATA / f"expected_{name}.asm").read_text()
+    assert result == expected

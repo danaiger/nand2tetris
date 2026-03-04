@@ -1,6 +1,10 @@
+from pathlib import Path
+import sys
+
 def translate_line(line:str)->str | None:
-    line = line.split('/')[0].strip()
-    if line == "":
+    line = line.split("//")[0].strip()
+    # generated_code=""
+    if not line:
         return None
     comment=f'// {line}'
     splitted=line.split(' ')
@@ -30,3 +34,18 @@ M=D
 M=M+1'''
 
     return comment+generated_code
+
+
+def translate(path: Path):
+    with open(path) as vm, open(path.with_suffix(".asm"), "w") as asm:
+        for line in vm:
+            translated=translate_line(line)
+            print(f"translated: {translated}")
+            if translated is not None:
+                asm.write(f"{translated}\n")
+
+def main():
+    translate(Path(sys.argv[1]))
+
+if __name__ == '__main__':
+    main()
