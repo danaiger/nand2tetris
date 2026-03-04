@@ -1,4 +1,5 @@
 def translate_line(line:str)->str | None:
+    line = line.split('/')[0].strip()
     if line == "":
         return None
     comment=f'// {line}'
