@@ -1,4 +1,6 @@
-def translate_line(line:str)->str:
+def translate_line(line:str)->str | None:
+    if line == "":
+        return None
     comment=f'// {line}'
     splitted=line.split(' ')
     command=splitted[0]

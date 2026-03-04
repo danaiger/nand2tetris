@@ -25,3 +25,9 @@ D=D+M
 M=D
 @SP
 M=M+1"""
+
+def test_translate_empty_line_returns_none():
+    assert translate_line("") is None
+
+
+
