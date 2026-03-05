@@ -28,6 +28,43 @@ M=D
 @SP
 M=M+1"""
 
+def test_and():
+    assert translate_line("and",1)=="""//(1) and
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D&M
+M=D
+@SP
+M=M+1"""
+
+def test_or():
+    assert translate_line("or",1)=="""//(1) or
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D|M
+M=D
+@SP
+M=M+1"""
+
+def test_not():
+    assert translate_line("not",1)=="""//(1) not
+@SP
+M=M-1
+A=M
+M=!M
+@SP
+M=M+1"""
+
 def test_sub():
     assert translate_line("sub",1)=="""//(1) sub
 @SP

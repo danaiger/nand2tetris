@@ -33,6 +33,34 @@ M=D
 @SP
 M=M+1'''
 
+    elif command =="and":
+        generated_code=f'''
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D&M
+M=D
+@SP
+M=M+1'''
+
+    elif command =="or":
+        generated_code=f'''
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D|M
+M=D
+@SP
+M=M+1'''
+
     elif command =="sub":
         generated_code=f'''
 @SP
@@ -53,6 +81,15 @@ M=M+1'''
 M=M-1
 A=M
 M=-M
+@SP
+M=M+1'''
+
+    elif command =="not":
+        generated_code=f'''
+@SP
+M=M-1
+A=M
+M=!M
 @SP
 M=M+1'''
 
