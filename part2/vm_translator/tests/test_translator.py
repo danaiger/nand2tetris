@@ -1,5 +1,6 @@
 import shutil
 from pathlib import Path
+import pytest
 from vm_translator.translate import translate, translate_line
 
 
@@ -183,8 +184,8 @@ M=M+1"""
 
 TEST_DATA = Path(__file__).parent / "test_data"
 
-def test_simple_add_vm_file(tmp_path):
-    name="SimpleAdd"
+@pytest.mark.parametrize("name", ["SimpleAdd", "StackTest"])
+def test_simple_add_vm_file(tmp_path,name):
     shutil.copy(TEST_DATA / f"{name}.vm", tmp_path / f"{name}.vm")
     translate(tmp_path / f"{name}.vm")
     result = (tmp_path / f"{name}.asm").read_text()
