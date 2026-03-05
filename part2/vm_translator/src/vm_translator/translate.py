@@ -33,6 +33,20 @@ M=D
 @SP
 M=M+1'''
 
+    elif command =="sub":
+        generated_code=f'''
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=M-D
+M=D
+@SP
+M=M+1'''
+
     elif command=="eq" or command =="lt" or command=="gt":
         generated_code=f'''
 @SP

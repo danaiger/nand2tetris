@@ -28,6 +28,22 @@ M=D
 @SP
 M=M+1"""
 
+def test_sub():
+    assert translate_line("sub",1)=="""//(1) sub
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=M-D
+M=D
+@SP
+M=M+1"""
+
+
+
 def test_eq():
     assert translate_line("eq",1)=="""//(1) eq
 @SP
@@ -37,7 +53,7 @@ D=M
 @SP
 M=M-1
 A=M
-D=D-M
+D=M-D
 @EQ_CASE_1
 D;JEQ
 D=0
@@ -61,7 +77,7 @@ D=M
 @SP
 M=M-1
 A=M
-D=D-M
+D=M-D
 @LT_CASE_1
 D;JLT
 D=0
@@ -85,7 +101,7 @@ D=M
 @SP
 M=M-1
 A=M
-D=D-M
+D=M-D
 @GT_CASE_1
 D;JGT
 D=0
