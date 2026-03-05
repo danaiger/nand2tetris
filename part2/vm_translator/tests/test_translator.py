@@ -28,6 +28,30 @@ M=D
 @SP
 M=M+1"""
 
+def test_eq():
+    assert translate_line("eq")=="""// eq
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D-M
+@EQ_CASE
+D;JEQ
+D=0
+@END
+0;JMP
+(EQ_CASE)
+D=-1
+(END)
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
 def test_translate_empty_line_returns_none():
     assert translate_line("") is None
 

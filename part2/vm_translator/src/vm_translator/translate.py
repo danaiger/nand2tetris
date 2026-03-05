@@ -33,6 +33,30 @@ M=D
 @SP
 M=M+1'''
 
+    elif command=="eq":
+        generated_code=f'''
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D-M
+@EQ_CASE
+D;JEQ
+D=0
+@END
+0;JMP
+(EQ_CASE)
+D=-1
+(END)
+@SP
+A=M
+M=D
+@SP
+M=M+1'''
+
     return comment+generated_code
 
 
@@ -40,7 +64,6 @@ def translate(path: Path):
     with open(path) as vm, open(path.with_suffix(".asm"), "w") as asm:
         for line in vm:
             translated=translate_line(line)
-            print(f"translated: {translated}")
             if translated is not None:
                 asm.write(f"{translated}\n")
 
