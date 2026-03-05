@@ -33,7 +33,7 @@ M=D
 @SP
 M=M+1'''
 
-    elif command=="eq" or command =="lt":
+    elif command=="eq" or command =="lt" or command=="gt":
         generated_code=f'''
 @SP
 M=M-1
@@ -56,7 +56,6 @@ A=M
 M=D
 @SP
 M=M+1'''
-
     return comment+generated_code
 
 

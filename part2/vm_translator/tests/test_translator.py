@@ -76,6 +76,31 @@ M=D
 @SP
 M=M+1"""
 
+def test_gt():
+    assert translate_line("gt")=="""// gt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D-M
+@GT_CASE
+D;JGT
+D=0
+@END
+0;JMP
+(GT_CASE)
+D=-1
+(END)
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
 
 def test_translate_empty_line_returns_none():
     assert translate_line("") is None
