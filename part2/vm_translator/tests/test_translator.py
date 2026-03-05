@@ -43,6 +43,14 @@ M=D
 M=M+1"""
 
 
+def test_neg():
+    assert translate_line("neg",1)=="""//(1) neg
+@SP
+M=M-1
+A=M
+M=-M
+@SP
+M=M+1"""
 
 def test_eq():
     assert translate_line("eq",1)=="""//(1) eq
