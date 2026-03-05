@@ -33,7 +33,7 @@ M=D
 @SP
 M=M+1'''
 
-    elif command=="eq":
+    elif command=="eq" or command =="lt":
         generated_code=f'''
 @SP
 M=M-1
@@ -43,12 +43,12 @@ D=M
 M=M-1
 A=M
 D=D-M
-@EQ_CASE
-D;JEQ
+@{command.upper()}_CASE
+D;J{command.upper()}
 D=0
 @END
 0;JMP
-(EQ_CASE)
+({command.upper()}_CASE)
 D=-1
 (END)
 @SP

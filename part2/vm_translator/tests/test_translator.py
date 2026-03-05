@@ -52,6 +52,31 @@ M=D
 @SP
 M=M+1"""
 
+def test_lt():
+    assert translate_line("lt")=="""// lt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D-M
+@LT_CASE
+D;JLT
+D=0
+@END
+0;JMP
+(LT_CASE)
+D=-1
+(END)
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
 def test_translate_empty_line_returns_none():
     assert translate_line("") is None
 
