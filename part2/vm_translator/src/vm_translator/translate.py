@@ -42,7 +42,7 @@ D=M
 @SP
 M=M-1
 A=M
-D=D-M
+D=M-D
 @{command.upper()}_CASE_{line_number}
 D;J{command.upper()}
 D=0
