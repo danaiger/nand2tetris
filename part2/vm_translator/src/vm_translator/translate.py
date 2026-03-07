@@ -39,6 +39,18 @@ A=M
 M=D
 @SP
 M=M+1'''
+        elif segment == "temp":
+            generated_code=f'''
+@5
+D=A
+@{number}
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1'''
     elif command=="pop":
         segment=splitted[1]
         number=splitted[2]
@@ -58,6 +70,22 @@ A=M
 M=D
 @SP
 M=M-1'''           
+        if segment =="temp":
+             generated_code=f'''
+@5
+D=A
+@{number}
+D=D+A
+@SP
+A=M
+M=D
+A=A-1
+D=M
+A=A+1
+A=M
+M=D
+@SP
+M=M-1'''
     elif command =="add":
         generated_code=f'''
 @SP
