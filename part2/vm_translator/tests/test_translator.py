@@ -164,6 +164,166 @@ M=M+1"""
 
 
 
+def test_push_local():
+    assert translate_line("push local 2", 1) == """//(1) push local 2
+@LCL
+D=M
+@2
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
+def test_push_argument():
+    assert translate_line("push argument 2", 1) == """//(1) push argument 2
+@ARG
+D=M
+@2
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
+def test_push_this():
+    assert translate_line("push this 2", 1) == """//(1) push this 2
+@THIS
+D=M
+@2
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
+def test_push_that():
+    assert translate_line("push that 2", 1) == """//(1) push that 2
+@THAT
+D=M
+@2
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
+def test_push_temp():
+    assert translate_line("push temp 2", 1) == """//(1) push temp 2
+@5
+D=A
+@2
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
+def test_pop_local():
+    assert translate_line("pop local 2", 1) == """//(1) pop local 2
+@LCL
+D=M
+@2
+D=D+A
+@SP
+A=M
+M=D
+A=A-1
+D=M
+A=A+1
+A=M
+M=D
+@SP
+M=M-1"""
+
+
+def test_pop_argument():
+    assert translate_line("pop argument 2", 1) == """//(1) pop argument 2
+@ARG
+D=M
+@2
+D=D+A
+@SP
+A=M
+M=D
+A=A-1
+D=M
+A=A+1
+A=M
+M=D
+@SP
+M=M-1"""
+
+
+def test_pop_this():
+    assert translate_line("pop this 2", 1) == """//(1) pop this 2
+@THIS
+D=M
+@2
+D=D+A
+@SP
+A=M
+M=D
+A=A-1
+D=M
+A=A+1
+A=M
+M=D
+@SP
+M=M-1"""
+
+
+def test_pop_that():
+    assert translate_line("pop that 2", 1) == """//(1) pop that 2
+@THAT
+D=M
+@2
+D=D+A
+@SP
+A=M
+M=D
+A=A-1
+D=M
+A=A+1
+A=M
+M=D
+@SP
+M=M-1"""
+
+
+def test_pop_temp():
+    assert translate_line("pop temp 2", 1) == """//(1) pop temp 2
+@5
+D=A
+@2
+D=D+A
+@SP
+A=M
+M=D
+A=A-1
+D=M
+A=A+1
+A=M
+M=D
+@SP
+M=M-1"""
+
+
 def test_translate_empty_line_returns_none():
     assert translate_line("",1) is None
 
