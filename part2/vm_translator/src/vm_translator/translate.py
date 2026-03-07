@@ -8,6 +8,11 @@ SEGMENT_TO_SHORTCUT={
     "that":"THAT",
 }
 
+NUMBER_TO_POINTER={
+    "0":"THIS",
+    "1":"THAT"
+}
+
 def translate_line(line:str,line_number:int)->str | None:
     line = line.split("//")[0].strip()
     if not line:
@@ -51,6 +56,15 @@ A=M
 M=D
 @SP
 M=M+1'''
+        elif segment=="pointer":
+            generated_code=f'''
+@{NUMBER_TO_POINTER[number]}
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1'''
     elif command=="pop":
         segment=splitted[1]
         number=splitted[2]
@@ -70,7 +84,7 @@ A=M
 M=D
 @SP
 M=M-1'''           
-        if segment =="temp":
+        elif segment =="temp":
              generated_code=f'''
 @5
 D=A
@@ -86,6 +100,14 @@ A=M
 M=D
 @SP
 M=M-1'''
+        elif segment=="pointer":
+            generated_code=f'''
+@SP
+M=M-1
+A=M
+D=M
+@{NUMBER_TO_POINTER[number]}
+M=D'''
     elif command =="add":
         generated_code=f'''
 @SP
