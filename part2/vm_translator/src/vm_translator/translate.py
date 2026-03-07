@@ -13,7 +13,7 @@ NUMBER_TO_POINTER={
     "1":"THAT"
 }
 
-def translate_line(line:str,line_number:int)->str | None:
+def translate_line(line:str,line_number:int,filename:str)->str | None:
     line = line.split("//")[0].strip()
     if not line:
         return None
@@ -65,6 +65,15 @@ A=M
 M=D
 @SP
 M=M+1'''
+        elif segment=="static":
+            generated_code=f'''
+@{filename}.{number}
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1'''
     elif command=="pop":
         segment=splitted[1]
         number=splitted[2]
@@ -84,6 +93,7 @@ A=M
 M=D
 @SP
 M=M-1'''           
+
         elif segment =="temp":
              generated_code=f'''
 @5
@@ -100,6 +110,7 @@ A=M
 M=D
 @SP
 M=M-1'''
+
         elif segment=="pointer":
             generated_code=f'''
 @SP
@@ -108,6 +119,16 @@ A=M
 D=M
 @{NUMBER_TO_POINTER[number]}
 M=D'''
+
+        elif segment=="static":
+            generated_code=f'''
+@SP
+M=M-1
+A=M
+D=M
+@{filename}.{number}
+M=D'''
+
     elif command =="add":
         generated_code=f'''
 @SP
@@ -212,7 +233,7 @@ def translate(path: Path):
     line_number=0
     with open(path) as vm, open(path.with_suffix(".asm"), "w") as asm:
         for line in vm:
-            translated=translate_line(line,line_number)
+            translated=translate_line(line,line_number,path.stem)
             if translated is not None:
                 asm.write(f"{translated}\n")
                 line_number+=1
