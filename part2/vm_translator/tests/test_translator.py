@@ -324,6 +324,48 @@ M=D
 M=M-1"""
 
 
+def test_push_pointer_0():
+    assert translate_line("push pointer 0", 1) == """//(1) push pointer 0
+@THIS
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
+def test_push_pointer_1():
+    assert translate_line("push pointer 1", 1) == """//(1) push pointer 1
+@THAT
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1"""
+
+
+def test_pop_pointer_0():
+    assert translate_line("pop pointer 0", 1) == """//(1) pop pointer 0
+@SP
+M=M-1
+A=M
+D=M
+@THIS
+M=D"""
+
+
+def test_pop_pointer_1():
+    assert translate_line("pop pointer 1", 1) == """//(1) pop pointer 1
+@SP
+M=M-1
+A=M
+D=M
+@THAT
+M=D"""
+
+
 def test_translate_empty_line_returns_none():
     assert translate_line("",1) is None
 
