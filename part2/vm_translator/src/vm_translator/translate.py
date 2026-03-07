@@ -1,17 +1,25 @@
 from pathlib import Path
 import sys
 
+SEGMENT_TO_SHORTCUT={
+    "local":"LCL",
+    "argument":"ARG",
+    "this":"THIS",
+    "that":"THAT",
+}
+
 def translate_line(line:str,line_number:int)->str | None:
     line = line.split("//")[0].strip()
-    # generated_code=""
     if not line:
         return None
     comment=f'//({line_number}) {line}'
     splitted=line.split(' ')
     command=splitted[0]
     if command=="push":
+        segment=splitted[1]
         number=splitted[2]
-        generated_code=f'''
+        if segment=="constant":
+            generated_code=f'''
 @{number}
 D=A
 @SP
@@ -19,6 +27,37 @@ A=M
 M=D
 @SP
 M=M+1'''
+        elif segment in SEGMENT_TO_SHORTCUT.keys():
+            generated_code=f'''
+@{SEGMENT_TO_SHORTCUT[segment]}
+D=M
+@{number}
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1'''
+    elif command=="pop":
+        segment=splitted[1]
+        number=splitted[2]
+        if segment in SEGMENT_TO_SHORTCUT.keys():
+             generated_code=f'''
+@{SEGMENT_TO_SHORTCUT[segment]}
+D=M
+@{number}
+D=D+A
+@SP
+A=M
+M=D
+A=A-1
+D=M
+A=A+1
+A=M
+M=D
+@SP
+M=M-1'''           
     elif command =="add":
         generated_code=f'''
 @SP
