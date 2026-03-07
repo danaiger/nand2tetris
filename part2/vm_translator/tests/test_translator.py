@@ -407,7 +407,7 @@ M=M+1"""
 
 TEST_DATA = Path(__file__).parent / "test_data"
 
-@pytest.mark.parametrize("name", ["SimpleAdd", "StackTest","BasicTest","PointerTest"])
+@pytest.mark.parametrize("name", ["SimpleAdd", "StackTest","BasicTest","PointerTest","StaticTest"])
 def test_simple_add_vm_file(tmp_path,name):
     shutil.copy(TEST_DATA / f"{name}.vm", tmp_path / f"{name}.vm")
     translate(tmp_path / f"{name}.vm")
