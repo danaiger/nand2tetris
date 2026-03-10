@@ -226,6 +226,22 @@ A=M
 M=D
 @SP
 M=M+1'''
+
+    elif command=="label":
+        name=splitted[1]
+        generated_code=f'''
+({name})'''
+
+    elif command=="if-goto":
+        dest=splitted[1]
+        generated_code=f'''
+@SP
+M=M-1
+A=M
+D=M
+@{dest}
+D;JGT'''
+        
     return comment+generated_code
 
 

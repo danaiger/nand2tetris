@@ -387,6 +387,21 @@ D=M
 M=D"""
 
 
+def test_label():
+    assert translate_line("label LOOP", 1, "Test") == """//(1) label LOOP
+(LOOP)"""
+
+
+def test_if_goto():
+    assert translate_line("if-goto LOOP", 1, "Test") == """//(1) if-goto LOOP
+@SP
+M=M-1
+A=M
+D=M
+@LOOP
+D;JGT"""
+
+
 def test_translate_empty_line_returns_none():
     assert translate_line("",1,"Test") is None
 
@@ -407,7 +422,7 @@ M=M+1"""
 
 TEST_DATA = Path(__file__).parent / "test_data"
 
-@pytest.mark.parametrize("name", ["SimpleAdd", "StackTest","BasicTest","PointerTest","StaticTest"])
+@pytest.mark.parametrize("name", ["SimpleAdd", "StackTest","BasicTest","PointerTest","StaticTest","BasicLoop"])
 def test_simple_add_vm_file(tmp_path,name):
     shutil.copy(TEST_DATA / f"{name}.vm", tmp_path / f"{name}.vm")
     translate(tmp_path / f"{name}.vm")
