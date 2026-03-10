@@ -20,6 +20,7 @@ def translate_line(line:str,line_number:int,filename:str)->str | None:
     comment=f'//({line_number}) {line}'
     splitted=line.split(' ')
     command=splitted[0]
+    print(command)
     if command=="push":
         segment=splitted[1]
         number=splitted[2]
@@ -241,7 +242,13 @@ A=M
 D=M
 @{dest}
 D;JGT'''
-        
+
+    elif command=="goto":
+        dest=splitted[1]
+        generated_code=f'''
+@{dest}
+0;JMP'''
+
     return comment+generated_code
 
 
