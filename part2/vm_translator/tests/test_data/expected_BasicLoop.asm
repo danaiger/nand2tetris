@@ -135,7 +135,7 @@ M=M-1
 A=M
 D=M
 @LOOP
-D;JGT
+D;JNE
 //(13) push local 0
 @LCL
 D=M

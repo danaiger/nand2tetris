@@ -399,7 +399,7 @@ M=M-1
 A=M
 D=M
 @LOOP
-D;JGT"""
+D;JNE"""
 
 
 def test_goto():

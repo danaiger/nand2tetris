@@ -241,7 +241,7 @@ M=M-1
 A=M
 D=M
 @{dest}
-D;JGT'''
+D;JNE'''
 
     elif command=="goto":
         dest=splitted[1]
