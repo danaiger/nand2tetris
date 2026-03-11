@@ -225,10 +225,22 @@ D;JNE'''
         nvars=splitted[2]
         generated_code=f'''
 ({name})
+@{nvars}
+D=A
+@n
+M=D
+@i
+M=0
+(LOOP)
 @0
 D=A
 {PUSH_D}
-{PUSH_D}'''
+@i
+DM=M+1
+@n
+D=D-M
+@LOOP
+D;JLT'''
 
     elif command=="return":
         generated_code=f'''
