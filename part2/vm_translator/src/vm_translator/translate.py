@@ -13,6 +13,19 @@ NUMBER_TO_POINTER={
     "1":"THAT"
 }
 
+POP_TO_D='''
+@SP
+M=M-1
+A=M
+D=M'''
+
+PUSH_D='''
+@SP
+A=M
+M=D
+@SP
+M=M+1'''
+
 def translate_line(line:str,line_number:int,filename:str)->str | None:
     line = line.split("//")[0].strip()
     if not line:
@@ -27,54 +40,29 @@ def translate_line(line:str,line_number:int,filename:str)->str | None:
         if segment=="constant":
             generated_code=f'''
 @{number}
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1'''
+D=A''' + PUSH_D
         elif segment in SEGMENT_TO_SHORTCUT.keys():
             generated_code=f'''
 @{SEGMENT_TO_SHORTCUT[segment]}
 D=M
 @{number}
 A=D+A
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1'''
+D=M''' + PUSH_D
         elif segment == "temp":
             generated_code=f'''
 @5
 D=A
 @{number}
 A=D+A
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1'''
+D=M''' + PUSH_D
         elif segment=="pointer":
             generated_code=f'''
 @{NUMBER_TO_POINTER[number]}
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1'''
+D=M''' + PUSH_D
         elif segment=="static":
             generated_code=f'''
 @{filename}.{number}
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1'''
+D=M''' + PUSH_D
     elif command=="pop":
         segment=splitted[1]
         number=splitted[2]
@@ -131,11 +119,7 @@ D=M
 M=D'''
 
     elif command =="add":
-        generated_code=f'''
-@SP
-M=M-1
-A=M
-D=M
+        generated_code=POP_TO_D+'''
 @SP
 M=M-1
 A=M
@@ -145,11 +129,7 @@ M=D
 M=M+1'''
 
     elif command =="and":
-        generated_code=f'''
-@SP
-M=M-1
-A=M
-D=M
+        generated_code=POP_TO_D+'''
 @SP
 M=M-1
 A=M
@@ -159,11 +139,7 @@ M=D
 M=M+1'''
 
     elif command =="or":
-        generated_code=f'''
-@SP
-M=M-1
-A=M
-D=M
+        generated_code=POP_TO_D+'''
 @SP
 M=M-1
 A=M
@@ -173,11 +149,7 @@ M=D
 M=M+1'''
 
     elif command =="sub":
-        generated_code=f'''
-@SP
-M=M-1
-A=M
-D=M
+        generated_code=POP_TO_D+'''
 @SP
 M=M-1
 A=M
@@ -205,11 +177,7 @@ M=!M
 M=M+1'''
 
     elif command=="eq" or command =="lt" or command=="gt":
-        generated_code=f'''
-@SP
-M=M-1
-A=M
-D=M
+        generated_code=POP_TO_D+f'''
 @SP
 M=M-1
 A=M
@@ -221,12 +189,7 @@ D=0
 0;JMP
 ({command.upper()}_CASE_{line_number})
 D=-1
-(END_{line_number})
-@SP
-A=M
-M=D
-@SP
-M=M+1'''
+(END_{line_number})''' + PUSH_D
 
     elif command=="label":
         name=splitted[1]
@@ -235,11 +198,7 @@ M=M+1'''
 
     elif command=="if-goto":
         dest=splitted[1]
-        generated_code=f'''
-@SP
-M=M-1
-A=M
-D=M
+        generated_code=POP_TO_D+f'''
 @{dest}
 D;JNE'''
 
