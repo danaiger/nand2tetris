@@ -229,14 +229,14 @@ D;JNE'''
         name=splitted[1]
         nvars=splitted[2]
         generated_code=f'''
-({name})
+({filename}.{name})
 @{nvars}
 D=A
 @n
 M=D
 @i
 M=0
-(LOOP)
+({_scoped_label("LOOP",current_function)})
 @0
 D=A
 {PUSH_D}
@@ -244,7 +244,7 @@ D=A
 DM=M+1
 @n
 D=D-M
-@LOOP
+@{_scoped_label("LOOP",current_function)}
 D;JLT'''
 
     elif command=="return":

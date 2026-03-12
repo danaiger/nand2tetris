@@ -1,12 +1,12 @@
 //(0) function SimpleFunction.test 2
-(SimpleFunction.test)
+(SimpleFunction.SimpleFunction.test)
 @2
 D=A
 @n
 M=D
 @i
 M=0
-(LOOP)
+(SimpleFunction.test$LOOP)
 @0
 D=A
 @SP
@@ -18,7 +18,7 @@ M=M+1
 DM=M+1
 @n
 D=D-M
-@LOOP
+@SimpleFunction.test$LOOP
 D;JLT
 //(1) push local 0
 @LCL
