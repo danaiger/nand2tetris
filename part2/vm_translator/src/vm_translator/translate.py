@@ -26,7 +26,12 @@ M=D
 @SP
 M=M+1'''
 
-def translate_line(line:str,line_number:int,filename:str)->str | None:
+def _scoped_label(name, current_function=None):
+    if current_function:
+        return f"{current_function}${name}"
+    return name
+
+def translate_line(line:str,line_number:int,filename:str,current_function:str|None=None)->str | None:
     line = line.split("//")[0].strip()
     if not line:
         return None
@@ -205,19 +210,19 @@ D=-1
     elif command=="label":
         name=splitted[1]
         generated_code=f'''
-({name})'''
+({_scoped_label(name,current_function)})'''
 
     elif command=="if-goto":
         dest=splitted[1]
         generated_code=f'''
 {POP_TO_D}
-@{dest}
+@{_scoped_label(dest,current_function)}
 D;JNE'''
 
     elif command=="goto":
         dest=splitted[1]
         generated_code=f'''
-@{dest}
+@{_scoped_label(dest,current_function)}
 0;JMP'''
 
     elif command=="function":
@@ -304,12 +309,19 @@ class VMTranslator:
 
     def translate(self,path: Path):
         line_number=0
+        self.current_function=None
         with open(path) as vm, open(path.with_suffix(".asm"), "w") as asm:
             for line in vm:
-                translated=translate_line(line,line_number,path.stem)
+                self._set_current_function_if_necessary(line)
+                translated=translate_line(line,line_number,path.stem,self.current_function)
                 if translated is not None:
                     asm.write(f"{translated}\n")
                     line_number+=1
+
+    def _set_current_function_if_necessary(self,line:str)->None:
+        splitted=line.split()
+        if splitted and splitted[0]=="function":
+            self.current_function=splitted[1]
 
 def main():
     VMTranslator(Path(sys.argv[1]))
