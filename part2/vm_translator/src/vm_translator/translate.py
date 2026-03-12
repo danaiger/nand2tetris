@@ -1,3 +1,4 @@
+from io import TextIOWrapper
 from pathlib import Path
 import sys
 
@@ -305,18 +306,29 @@ A=M
 
 class VMTranslator:
     def __init__(self,path: Path):
+        self.accumulated_line_number=0
         self.translate(path)
 
     def translate(self,path: Path):
-        line_number=0
+        with open(path.with_suffix(".asm"), "w") as asm:
+            if path.is_dir():
+                for file in path.glob("*.vm"):
+                    self.translate_file(file,asm)
+            elif path.is_file():
+                self.translate_file(path,asm)
+            else:
+                raise ValueError("should never reach here (unless the path passed is not file nor dir)")
+    
+
+    def translate_file(self,path: Path, asm:TextIOWrapper):
         self.current_function=None
-        with open(path) as vm, open(path.with_suffix(".asm"), "w") as asm:
+        with open(path) as vm:
             for line in vm:
                 self._set_current_function_if_necessary(line)
-                translated=translate_line(line,line_number,path.stem,self.current_function)
+                translated=translate_line(line,self.accumulated_line_number,path.stem,self.current_function)
                 if translated is not None:
                     asm.write(f"{translated}\n")
-                    line_number+=1
+                    self.accumulated_line_number+=1
 
     def _set_current_function_if_necessary(self,line:str)->None:
         splitted=line.split()
