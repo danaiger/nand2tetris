@@ -230,7 +230,7 @@ D;JNE'''
         name=splitted[1]
         nvars=splitted[2]
         generated_code=f'''
-({filename}.{name})
+({name})
 @{nvars}
 D=A
 @n

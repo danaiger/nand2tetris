@@ -1,5 +1,5 @@
 //(0) function SimpleFunction.test 2
-(SimpleFunction.SimpleFunction.test)
+(SimpleFunction.test)
 @2
 D=A
 @n
