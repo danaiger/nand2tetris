@@ -296,17 +296,23 @@ A=M
     return comment+generated_code
 
 
-def translate(path: Path):
-    line_number=0
-    with open(path) as vm, open(path.with_suffix(".asm"), "w") as asm:
-        for line in vm:
-            translated=translate_line(line,line_number,path.stem)
-            if translated is not None:
-                asm.write(f"{translated}\n")
-                line_number+=1
+
+
+class VMTranslator:
+    def __init__(self,path: Path):
+        self.translate(path)
+
+    def translate(self,path: Path):
+        line_number=0
+        with open(path) as vm, open(path.with_suffix(".asm"), "w") as asm:
+            for line in vm:
+                translated=translate_line(line,line_number,path.stem)
+                if translated is not None:
+                    asm.write(f"{translated}\n")
+                    line_number+=1
 
 def main():
-    translate(Path(sys.argv[1]))
+    VMTranslator(Path(sys.argv[1]))
 
 if __name__ == '__main__':
     main()

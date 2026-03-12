@@ -1,7 +1,7 @@
 import shutil
 from pathlib import Path
 import pytest
-from vm_translator.translate import translate, translate_line
+from vm_translator.translate import VMTranslator, translate_line
 
 
 def test_push_constant_i():
@@ -431,7 +431,7 @@ TEST_DATA = Path(__file__).parent / "test_data"
 @pytest.mark.parametrize("name", ["SimpleAdd", "StackTest","BasicTest","PointerTest","StaticTest","BasicLoop","FibonacciSeries","SimpleFunction"])
 def test_simple_add_vm_file(tmp_path,name):
     shutil.copy(TEST_DATA / f"{name}.vm", tmp_path / f"{name}.vm")
-    translate(tmp_path / f"{name}.vm")
+    VMTranslator(tmp_path / f"{name}.vm")
     result = (tmp_path / f"{name}.asm").read_text()
     expected = (TEST_DATA / f"expected_{name}.asm").read_text()
     assert result == expected
