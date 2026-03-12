@@ -233,6 +233,8 @@ D;JNE'''
 ({name})
 @{nvars}
 D=A
+@{_scoped_label("END",current_function)}
+D;JEQ
 @n
 M=D
 @i
@@ -246,7 +248,9 @@ DM=M+1
 @n
 D=D-M
 @{_scoped_label("LOOP",current_function)}
-D;JLT'''
+D;JLT
+({_scoped_label("END",current_function)})
+'''
 
     elif command=="return":
         generated_code=f'''

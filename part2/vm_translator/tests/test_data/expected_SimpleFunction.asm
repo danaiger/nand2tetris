@@ -2,6 +2,8 @@
 (SimpleFunction.test)
 @2
 D=A
+@SimpleFunction.test$END
+D;JEQ
 @n
 M=D
 @i
@@ -20,6 +22,8 @@ DM=M+1
 D=D-M
 @SimpleFunction.test$LOOP
 D;JLT
+(SimpleFunction.test$END)
+
 //(1) push local 0
 @LCL
 D=M
