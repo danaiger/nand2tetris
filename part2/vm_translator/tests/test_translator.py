@@ -436,7 +436,7 @@ def test_single_vm_file(tmp_path,name):
     expected = (TEST_DATA / f"expected_{name}.asm").read_text()
     assert result == expected
 
-@pytest.mark.parametrize("name", ["nested_call"])
+@pytest.mark.parametrize("name", ["nested_call","fibonacci_element"])
 def test_dir(tmp_path,name):
     shutil.copytree(TEST_DATA / f"{name}", tmp_path / f"{name}")
     VMTranslator(tmp_path / f"{name}")
