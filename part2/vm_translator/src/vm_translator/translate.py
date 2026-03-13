@@ -233,13 +233,13 @@ D;JNE'''
 ({name})
 @{nvars}
 D=A
-@{_scoped_label("END",current_function)}
+@FINISH_{line_number}
 D;JEQ
 @n
 M=D
 @i
 M=0
-({_scoped_label("LOOP",current_function)})
+(LOOP_{line_number})
 @0
 D=A
 {PUSH_D}
@@ -247,9 +247,9 @@ D=A
 DM=M+1
 @n
 D=D-M
-@{_scoped_label("LOOP",current_function)}
+@LOOP_{line_number}
 D;JLT
-({_scoped_label("END",current_function)})
+(FINISH_{line_number})
 '''
 
     elif command=="return":

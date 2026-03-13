@@ -2,13 +2,13 @@
 (SimpleFunction.test)
 @2
 D=A
-@SimpleFunction.test$END
+@FINISH_0
 D;JEQ
 @n
 M=D
 @i
 M=0
-(SimpleFunction.test$LOOP)
+(LOOP_0)
 @0
 D=A
 @SP
@@ -20,9 +20,9 @@ M=M+1
 DM=M+1
 @n
 D=D-M
-@SimpleFunction.test$LOOP
+@LOOP_0
 D;JLT
-(SimpleFunction.test$END)
+(FINISH_0)
 
 //(1) push local 0
 @LCL
