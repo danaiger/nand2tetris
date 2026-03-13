@@ -39,7 +39,6 @@ def translate_line(line:str,line_number:int,filename:str,current_function:str|No
     comment=f'//({line_number}) {line}'
     splitted=line.split(' ')
     command=splitted[0]
-    print(command)
     if command=="push":
         segment=splitted[1]
         number=splitted[2]
