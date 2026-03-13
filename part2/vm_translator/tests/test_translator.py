@@ -429,9 +429,17 @@ M=M+1"""
 TEST_DATA = Path(__file__).parent / "test_data"
 
 @pytest.mark.parametrize("name", ["SimpleAdd", "StackTest","BasicTest","PointerTest","StaticTest","BasicLoop","FibonacciSeries","SimpleFunction"])
-def test_simple_add_vm_file(tmp_path,name):
+def test_single_vm_file(tmp_path,name):
     shutil.copy(TEST_DATA / f"{name}.vm", tmp_path / f"{name}.vm")
     VMTranslator(tmp_path / f"{name}.vm")
     result = (tmp_path / f"{name}.asm").read_text()
     expected = (TEST_DATA / f"expected_{name}.asm").read_text()
     assert result == expected
+
+@pytest.mark.parametrize("name", ["nested_call"])
+def test_dir(tmp_path,name):
+    shutil.copytree(TEST_DATA / f"{name}", tmp_path / f"{name}")
+    VMTranslator(tmp_path / f"{name}")
+    result = (tmp_path /f"{name}"/ f"{name}.asm").read_text()
+    expected = (TEST_DATA /f"{name}"/ f"expected_{name}.asm").read_text()
+    assert result == expected   

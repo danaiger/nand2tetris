@@ -303,6 +303,43 @@ A=M
 0;JMP
 '''
 
+    elif command=="call":
+        name=splitted[1]
+        nargs=splitted[2]
+        return_label=f"{current_function}$ret.{line_number}"
+        generated_code=f""""
+@{return_label}
+D=A
+{PUSH_D}
+@LCL
+D=M
+{PUSH_D}
+@ARG
+D=M
+{PUSH_D}
+@THIS
+D=M
+{PUSH_D}
+@THAT
+D=M
+{PUSH_D}
+@{nargs}
+D=A
+@5
+D=D+A
+@SP
+D=M-D
+@ARG
+M=D
+@SP
+D=M
+@LCL
+M=D
+@{name}
+0;JMP
+({return_label})
+"""
+
     return comment+generated_code
 
 
@@ -314,12 +351,13 @@ class VMTranslator:
         self.translate(path)
 
     def translate(self,path: Path):
-        with open(path.with_suffix(".asm"), "w") as asm:
             if path.is_dir():
-                for file in path.glob("*.vm"):
-                    self.translate_file(file,asm)
+                with open(path/f"{path.stem}.asm", "w") as asm:
+                    for file in path.glob("*.vm"):
+                        self.translate_file(file,asm)
             elif path.is_file():
-                self.translate_file(path,asm)
+                with open(path.with_suffix(".asm"), "w") as asm:
+                    self.translate_file(path,asm)
             else:
                 raise ValueError("should never reach here (unless the path passed is not file nor dir)")
     
