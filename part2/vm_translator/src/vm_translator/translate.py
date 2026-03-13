@@ -342,7 +342,62 @@ M=D
 
     return comment+generated_code
 
-
+BOOTSTRAP=f"""@256
+D=A
+@SP
+M=D
+// call Sys.init 0"
+@bootstrap$$ret
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@LCL
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@ARG
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THIS
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THAT
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@0
+D=A
+@5
+D=D+A
+@SP
+D=M-D
+@ARG
+M=D
+@SP
+D=M
+@LCL
+M=D
+@Sys.init
+0;JMP
+(bootstrap$$ret)
+"""
 
 
 class VMTranslator:
@@ -353,6 +408,7 @@ class VMTranslator:
     def translate(self,path: Path):
             if path.is_dir():
                 with open(path/f"{path.stem}.asm", "w") as asm:
+                    asm.write(BOOTSTRAP)
                     for file in path.glob("*.vm"):
                         self.translate_file(file,asm)
             elif path.is_file():
