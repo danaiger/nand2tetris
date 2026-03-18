@@ -1,0 +1,16 @@
+class Main {
+    function void main() {
+        var HashTable dict;
+        let dict = HashTable.new(100);
+        do dict.put(10, 2);
+        do dict.put(30, 1);
+        do Output.printInt(dict.get(10)); // should print 2
+        do dict.put(10,5);
+        do Output.printInt(dict.get(10)); // should print 5
+        do Output.printInt(dict.get(30)); // should print 1 
+        do Output.printInt(dict.get(50)); // should print error
+        do Output.printInt(dict.get(10)); // should not reach here
+        do dict.dispose();
+        return;
+    }
+}

@@ -1,0 +1,19 @@
+class Entry {
+    field int key;
+    field int value;
+
+    constructor Entry new(int k, int v) {
+        let key = k;
+        let value = v;
+        return this;
+    }
+
+    method int getKey() { return key; }
+    method int getValue() { return value; }
+    method void setValue(int v) { let value = v; return; }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+}

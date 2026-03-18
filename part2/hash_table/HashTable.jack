@@ -1,0 +1,68 @@
+class HashTable {
+    field Array arr;
+    field int size;
+    field int capacity;
+
+    constructor HashTable new(int cap) {
+        let arr = Array.new(cap);
+        let capacity = cap;
+        let size = 0;
+        return this;
+    }
+
+    function int mod(int a, int b) {
+        while (a > (b - 1)) {
+            let a = a - b;
+        }
+        return a;
+    }
+
+    method void put(int key, int value) {
+        var int index;
+        var Entry entry;
+        let index = HashTable.mod(key, capacity);
+        while (~(arr[index] = 0)) {
+            let entry = arr[index];
+            if (entry.getKey() = key) {
+                do entry.setValue(value);
+                return;
+            }
+            let index = HashTable.mod((index + 1), capacity);
+        }
+        let arr[index] = Entry.new(key, value);
+        return;
+    }
+
+    method int get(int key) {
+        var int index;
+        var Entry entry;
+        let index = HashTable.mod(key, capacity);
+        let entry=arr[index];
+        while ((~(entry = 0)) & (~(entry.getKey() = key))) {
+            let index = HashTable.mod((index + 1), capacity);
+            let entry = arr[index];
+        }
+        if (~(entry = 0)) {
+            return entry.getValue();
+        }
+        do Sys.error(1);
+        return 0;
+    }
+
+    method void dispose() {
+        var int index;
+        var Entry entry;
+        let index = 0;
+        while (index < capacity) {
+            let entry = arr[index];
+            if (~(entry = 0)) {
+                do entry.dispose();
+
+            }
+            let index = index + 1;
+        }
+        do arr.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+}
