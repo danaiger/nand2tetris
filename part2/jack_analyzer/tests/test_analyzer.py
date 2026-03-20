@@ -26,3 +26,10 @@ def test_has_more_tokens_is_true_for_class(tmp_path):
     with open(file) as f:
         tokenizer=JackTokenizer(f)
         assert tokenizer.has_more_tokens()==True
+
+def test_has_more_tokens_is_false_for_inline_comment(tmp_path):
+    file = tmp_path /"EmptyFile.jack"
+    file.write_text(" \n   // an inline comment ")
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==False
