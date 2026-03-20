@@ -19,3 +19,10 @@ def test_has_more_tokens_is_false_on_spaces_and_newlines(tmp_path):
     with open(file) as f:
         tokenizer=JackTokenizer(f)
         assert tokenizer.has_more_tokens()==False
+
+def test_has_more_tokens_is_true_for_class(tmp_path):
+    file = tmp_path /"EmptyFile.jack"
+    file.write_text("class")
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
