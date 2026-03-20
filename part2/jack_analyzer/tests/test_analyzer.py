@@ -1,4 +1,5 @@
 from jack_analyzer.analyzer import JackAnalyzer
+from jack_analyzer.tokenizer import JackTokenizer
 
 def test_placeholder():
     assert True
@@ -11,3 +12,10 @@ def test_analyzer_writes_only_token_for_empty_file(tmp_path):
     xml_written=written_xml_file_path.read_text()
     assert xml_written=="""<tokens>
 </tokens>"""
+
+def test_has_more_tokens_is_false_on_spaces_and_newlines(tmp_path):
+    file = tmp_path /"EmptyFile.jack"
+    file.write_text("        \n  \n ")
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==False

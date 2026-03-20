@@ -19,16 +19,18 @@ class JackTokenizer:
     def advance(self)->None:
        self._advance_to_begin_char() 
     
-    def _ignore_if_comment(self):
-        current_position=self.file.tell()
-        if self.file.read(2)=='//':
-            pass
+    def has_more_tokens(self)->bool:
+        return False
+    
+    # def _ignore_if_comment(self):
+    #     current_position=self.file.tell()
+    #     if self.file.read(2)=='//':
+    #         pass
 
     def _advance_to_begin_char(self):
         begin_char=self.file.read(1)
         while begin_char in (' ','\n'):
             begin_char=self.file.read(1)
-        self._ignore_if_comment()
         
             
 
