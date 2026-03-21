@@ -42,4 +42,24 @@ def test_current_token_updated_to_class_after_advancing(tmp_path):
         tokenizer.advance()
         assert tokenizer.get_current_token()=="class"
 
+def test_has_more_tokens_before_adavancing_and_has_not_after(tmp_path):
+    file = tmp_path /"EmptyFile.jack"
+    file.write_text("class")
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=="class"
+        assert tokenizer.has_more_tokens()==False
 
+def test_can_infer_class_token_while_ignoring_preceding_newlines_spaces_and_inline_comments(tmp_path):
+    file = tmp_path /"EmptyFile.jack"
+    file.write_text("""    //some_comment
+    //more comments
+                    class""")
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=="class"
+        assert tokenizer.has_more_tokens()==False

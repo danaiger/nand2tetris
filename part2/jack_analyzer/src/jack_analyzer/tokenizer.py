@@ -22,9 +22,10 @@ class JackTokenizer:
     def advance(self)->None:
         current_token=''
         self._advance_to_begin_char() 
+        current_token+=self.file.read()
         while True:
             next_char=self.file.read(1)
-            if next_char == '':
+            if next_char in ['','\n',' ']:
                 break
             else:
                 current_token+=next_char
@@ -35,8 +36,6 @@ class JackTokenizer:
         place_to_return=self.file.tell()
         self._advance_to_begin_char()
         next_char=self.file.read(1)
-        # print('AAAAAAAAAAAAAa')
-        # print(ord(next_char))
         self.file.seek(place_to_return)
         if next_char != '':
             return True
@@ -55,22 +54,25 @@ class JackTokenizer:
         else:
             self.file.seek(saved_position)
 
+    def _peek(self)->str:
+        saved_position=self.file.tell()
+        next_char=self.file.read(1)
+        self.file.seek(saved_position)
+        return next_char
+
     def _advance_to_begin_char(self)->None:
+        self._skip_white_spaces_and_newlines()
+        self._ignore_if_comment()
+        next_char=self._peek()
+        if next_char in [' ','\n','/']:
+            self._advance_to_begin_char()
+        
+    def _skip_white_spaces_and_newlines(self)->None:
         while True:
             saved_position=self.file.tell()
             next_char=self.file.read(1)
             if next_char != ' ' and next_char!='\n':
                 break
         self.file.seek(saved_position)
-        # next_char=self.file.read(1)
-        # print("AAAAAAAAAAAAAAAAAA")
-        # print(ord(next_char))
-
-        # begin_char=self.file.read(1)
-        # while begin_char in (' ','\n'):
-        #     begin_char=self.file.read(1)
-        # self.file.seek(self.file.tell()-1)
-        self._ignore_if_comment()
-        
             
 
