@@ -1,5 +1,7 @@
+import pytest
 from jack_analyzer.analyzer import JackAnalyzer
 from jack_analyzer.tokenizer import JackTokenizer
+from jack_analyzer.tokenizer import JACK_KEYWORDS
 
 def test_placeholder():
     assert True
@@ -76,14 +78,15 @@ def test_can_infer_class_token_while_ignoring_trailing_newlines_spaces_and_inlin
         assert tokenizer.get_current_token()=="class"
         assert tokenizer.has_more_tokens()==False
 
-def test_token_type_is_keyword_for_class(tmp_path):
+@pytest.mark.parametrize("name", JACK_KEYWORDS)
+def test_token_type_is_keyword_for_keywords(tmp_path,name):
     file = tmp_path /"File.jack"
-    file.write_text("""class""")
+    file.write_text(f"""{name}""")
     with open(file) as f:
         tokenizer=JackTokenizer(f)
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
-        assert tokenizer.get_current_token()=="class"
+        assert tokenizer.get_current_token()==f"{name}"
         assert tokenizer.token_type()=="KEYWORD"
 
 def test_token_type_is_string_const_for_somestring(tmp_path):
