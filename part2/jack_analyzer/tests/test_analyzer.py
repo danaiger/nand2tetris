@@ -63,3 +63,15 @@ def test_can_infer_class_token_while_ignoring_preceding_newlines_spaces_and_inli
         tokenizer.advance()
         assert tokenizer.get_current_token()=="class"
         assert tokenizer.has_more_tokens()==False
+
+def test_can_infer_class_token_while_ignoring_trailing_newlines_spaces_and_inline_comments(tmp_path):
+    file = tmp_path /"EmptyFile.jack"
+    file.write_text("""class //a comment
+           //another comment
+                             """)
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=="class"
+        assert tokenizer.has_more_tokens()==False

@@ -22,7 +22,7 @@ class JackTokenizer:
     def advance(self)->None:
         current_token=''
         self._advance_to_begin_char() 
-        current_token+=self.file.read()
+        current_token+=self.file.read(1)
         while True:
             next_char=self.file.read(1)
             if next_char in ['','\n',' ']:
