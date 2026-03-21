@@ -69,10 +69,9 @@ class JackTokenizer:
         
     def _skip_white_spaces_and_newlines(self)->None:
         while True:
-            saved_position=self.file.tell()
-            next_char=self.file.read(1)
+            next_char=self._peek()
             if next_char != ' ' and next_char!='\n':
                 break
-        self.file.seek(saved_position)
+            self.file.read(1)
             
 
