@@ -34,6 +34,8 @@ class JackTokenizer:
     def token_type(self)->str:
         if self.current_token.startswith('"'):
             return "STRING_CONST"
+        elif self.current_token in JACK_SYMBOLS:
+            return "SYMBOL"
         else:
             return "KEYWORD"
 

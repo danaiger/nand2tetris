@@ -1,6 +1,6 @@
 import pytest
 from jack_analyzer.analyzer import JackAnalyzer
-from jack_analyzer.tokenizer import JackTokenizer
+from jack_analyzer.tokenizer import JACK_SYMBOLS, JackTokenizer
 from jack_analyzer.tokenizer import JACK_KEYWORDS
 
 def test_placeholder():
@@ -88,6 +88,17 @@ def test_token_type_is_keyword_for_keywords(tmp_path,name):
         tokenizer.advance()
         assert tokenizer.get_current_token()==f"{name}"
         assert tokenizer.token_type()=="KEYWORD"
+
+@pytest.mark.parametrize("name", JACK_SYMBOLS)
+def test_token_type_is_symbol_for_symbols(tmp_path,name):
+    file = tmp_path /"File.jack"
+    file.write_text(f"""{name}""")
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
+        tokenizer.advance()
+        assert tokenizer.get_current_token()==f"{name}"
+        assert tokenizer.token_type()=="SYMBOL"
 
 def test_token_type_is_string_const_for_somestring(tmp_path):
     file = tmp_path /"File.jack"
