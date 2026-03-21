@@ -38,8 +38,10 @@ class JackTokenizer:
             return "SYMBOL"
         elif self.current_token[0].isdigit():
             return "INT_CONST"
-        else:
+        elif self.current_token in JACK_KEYWORDS:
             return "KEYWORD"
+        else:
+            return "IDENTIFIER"
 
     def has_more_tokens(self)->bool:
         place_to_return=self.file.tell()
@@ -52,8 +54,6 @@ class JackTokenizer:
             return False
    
     def _ignore_if_comment(self):
-        # if self._peek() == '/':
-
         self._ignore_if_inline_comment()
 
     def _ignore_if_inline_comment(self):
