@@ -50,6 +50,8 @@ class JackTokenizer:
             return False
    
     def _ignore_if_comment(self):
+        # if self._peek() == '/':
+
         self._ignore_if_inline_comment()
 
     def _ignore_if_inline_comment(self):
@@ -61,17 +63,26 @@ class JackTokenizer:
         else:
             self.file.seek(saved_position)
 
-    def _peek(self)->str:
+    def _peek(self,number_of_chars=0)->str:
         saved_position=self.file.tell()
-        next_char=self.file.read(1)
+        next_chars=self.file.read(number_of_chars+1)
         self.file.seek(saved_position)
-        return next_char
+        return next_chars
+
+    def _is_comment(self)->bool:
+        if self._peek(2)=='//' and self.token_type()!="STRING_CONSTANT":
+            return True
+        else: 
+            return False
 
     def _advance_to_begin_char(self)->None:
         self._skip_white_spaces_and_newlines()
         self._ignore_if_comment()
+
         next_char=self._peek()
-        if next_char in [' ','\n','/']:
+        if next_char=='/' and not self._is_comment():
+            return
+        if next_char in [' ','\n']:
             self._advance_to_begin_char()
         
     def _skip_white_spaces_and_newlines(self)->None:
