@@ -32,7 +32,10 @@ class JackTokenizer:
         self.current_token=current_token
 
     def token_type(self)->str:
-        return "KEYWORD"
+        if self.current_token.startswith('"'):
+            return "STRING_CONST"
+        else:
+            return "KEYWORD"
 
     def has_more_tokens(self)->bool:
         place_to_return=self.file.tell()
