@@ -31,7 +31,9 @@ class JackTokenizer:
                 current_token+=next_char
         self.current_token=current_token
 
-    
+    def token_type(self)->str:
+        return "KEYWORD"
+
     def has_more_tokens(self)->bool:
         place_to_return=self.file.tell()
         self._advance_to_begin_char()
