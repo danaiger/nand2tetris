@@ -18,17 +18,31 @@ class JackTokenizer:
     
     def get_current_token(self):
         return self.current_token
+    
+    def _tokenize_str(self)->str:
+        current_token=self.file.read(1)
 
-    def advance(self)->None:
-        current_token=''
-        self._advance_to_begin_char() 
-        current_token+=self.file.read(1)
         while True:
             next_char=self.file.read(1)
-            if next_char in ['','\n',' ']:
+            if next_char in ['"']:
                 break
             else:
                 current_token+=next_char
+        return current_token+'"'
+
+    def advance(self)->None:
+        self._advance_to_begin_char() 
+        next_char=self._peek()
+        if next_char=='"':
+            current_token=self._tokenize_str()
+        else:
+            current_token=''
+            while True:
+                next_char=self.file.read(1)
+                if next_char in ['','\n',' ']:
+                    break
+                else:
+                    current_token+=next_char
         self.current_token=current_token
 
     def token_type(self)->str:
