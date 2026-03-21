@@ -36,6 +36,8 @@ class JackTokenizer:
             return "STRING_CONST"
         elif self.current_token in JACK_SYMBOLS:
             return "SYMBOL"
+        elif self.current_token[0].isdigit():
+            return "INT_CONST"
         else:
             return "KEYWORD"
 
@@ -70,7 +72,7 @@ class JackTokenizer:
         return next_chars
 
     def _is_comment(self)->bool:
-        if self._peek(2)=='//' and self.token_type()!="STRING_CONSTANT":
+        if self._peek(2)=='//':
             return True
         else: 
             return False
