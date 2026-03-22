@@ -23,6 +23,14 @@ def test_has_more_tokens_is_false_for_inline_comment(tmp_path):
         tokenizer=JackTokenizer(f)
         assert tokenizer.has_more_tokens()==False
 
+def test_has_more_tokens_is_false_for_two_inline_comment(tmp_path):
+    file = tmp_path /"File.jack"
+    file.write_text("// an inline comment\n// another comment")
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==False
+        
+
 def test_has_more_tokens_is_false_for_multiline_comment(tmp_path):
     file = tmp_path /"File.jack"
     file.write_text(""" \n   /* a  

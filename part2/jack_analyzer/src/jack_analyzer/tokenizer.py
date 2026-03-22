@@ -109,9 +109,9 @@ class JackTokenizer:
         else:
             self.file.seek(saved_position)
 
-    def _peek(self,number_of_chars=0)->str:
+    def _peek(self,number_of_chars=1)->str:
         saved_position=self.file.tell()
-        next_chars=self.file.read(number_of_chars+1)
+        next_chars=self.file.read(number_of_chars)
         self.file.seek(saved_position)
         return next_chars
 
@@ -128,7 +128,7 @@ class JackTokenizer:
         next_char=self._peek()
         if next_char=='/' and not self._is_comment():
             return
-        if next_char in [' ','\n']:
+        if next_char in [' ','\n','/']:
             self._advance_to_begin_char()
         
     def _skip_white_spaces_and_newlines(self)->None:
