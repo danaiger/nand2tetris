@@ -5,8 +5,8 @@ from typing import TextIO
 class TokenType(str, Enum):
     keyword = "keyword"
     symbol = "symbol"
-    string_const = "string_const"
-    int_const = "int_const"
+    string_const = "stringConstant"
+    int_const = "integerConstant"
     identifier = "identifier"
 
 JACK_KEYWORDS={'class','constructor','function',
