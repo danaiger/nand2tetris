@@ -132,6 +132,16 @@ def test_token_type_is_int_const_for_arbitrary_number(tmp_path):
         assert tokenizer.get_current_token()=='1235'
         assert tokenizer.token_type()=="INT_CONST"
 
+def test_number_then_symbol(tmp_path):
+    file = tmp_path /"File.jack"
+    file.write_text("13;")
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=="13"
+        tokenizer.advance()
+        assert tokenizer.get_current_token()==";"
+
 def test_string_token_adjacent_to_symbol_is_interpreted_as_two_tokens(tmp_path):
     file = tmp_path /"File.jack"
     file.write_text('''"somestring";''')

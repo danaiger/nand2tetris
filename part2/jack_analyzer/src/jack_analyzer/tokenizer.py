@@ -34,11 +34,11 @@ class JackTokenizer:
         current_token=self.file.read(1)
 
         while True:
-            next_char=self.file.read(1)
+            next_char=self._peek()
             if not next_char.isdigit():
                 break
             else:
-                current_token+=next_char
+                current_token+=self.file.read(1)
         return current_token
     
     def _tokenize_symbol(self):
