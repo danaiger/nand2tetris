@@ -164,4 +164,15 @@ def test_symbol_is_tokenized_as_one_character(tmp_path,symbol):
         tokenizer.advance()
         assert tokenizer.get_current_token()==symbol
         assert tokenizer.token_type()=="SYMBOL"
- 
+
+CHAR_OUTSIDE_IDENTIFIER=JACK_SYMBOLS.union({'',' ','\n','"'})
+@pytest.mark.parametrize("char_outside_identifier", CHAR_OUTSIDE_IDENTIFIER)
+def test_identifier_is_tokenized_properly(tmp_path,char_outside_identifier):
+    file = tmp_path /"File.jack"
+    file.write_text(f'''identifier{char_outside_identifier}''')
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=="identifier"
+        assert tokenizer.token_type()=="IDENTIFIER"

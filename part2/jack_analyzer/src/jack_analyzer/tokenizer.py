@@ -59,7 +59,7 @@ class JackTokenizer:
             current_token=''
             while True:
                 next_char=self.file.read(1)
-                if next_char in ['','\n',' ']:
+                if next_char in ['','\n',' ','"'] or next_char in JACK_SYMBOLS:
                     break
                 else:
                     current_token+=next_char
