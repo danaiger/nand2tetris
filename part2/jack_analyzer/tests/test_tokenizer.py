@@ -2,9 +2,9 @@ import pytest
 from jack_analyzer.tokenizer import JACK_SYMBOLS, JackTokenizer
 from jack_analyzer.tokenizer import JACK_KEYWORDS
 
-def test_has_more_tokens_is_false_on_spaces_and_newlines(tmp_path):
+def test_has_more_tokens_is_false_on_spaces_and_newlines_and_tabs(tmp_path):
     file = tmp_path /"File.jack"
-    file.write_text("        \n  \n ")
+    file.write_text("     \t   \n  \n ")
     with open(file) as f:
         tokenizer=JackTokenizer(f)
         assert tokenizer.has_more_tokens()==False
@@ -68,9 +68,9 @@ def test_has_more_tokens_before_adavancing_and_has_not_after(tmp_path):
 
 def test_can_infer_class_token_while_ignoring_preceding_newlines_spaces_and_inline_comments(tmp_path):
     file = tmp_path /"File.jack"
-    file.write_text("""    //some_comment
+    file.write_text(""" \t   //some_comment 
     //more comments
-                    class""")
+             \t       class""")
     with open(file) as f:
         tokenizer=JackTokenizer(f)
         assert tokenizer.has_more_tokens()==True
@@ -80,9 +80,9 @@ def test_can_infer_class_token_while_ignoring_preceding_newlines_spaces_and_inli
 
 def test_can_infer_class_token_while_ignoring_trailing_newlines_spaces_and_inline_comments(tmp_path):
     file = tmp_path /"File.jack"
-    file.write_text("""class //a comment
-           //another comment
-                             """)
+    file.write_text("""class \t //a comment
+      \t  //another comment
+                      \t       """)
     with open(file) as f:
         tokenizer=JackTokenizer(f)
         assert tokenizer.has_more_tokens()==True

@@ -122,7 +122,7 @@ class JackTokenizer:
             return False
 
     def _advance_to_begin_char(self)->None:
-        self._skip_white_spaces_and_newlines()
+        self._skip_empty_chars()
         self._ignore_if_comment()
 
         next_char=self._peek()
@@ -131,10 +131,10 @@ class JackTokenizer:
         if next_char in [' ','\n','/']:
             self._advance_to_begin_char()
         
-    def _skip_white_spaces_and_newlines(self)->None:
+    def _skip_empty_chars(self)->None:
         while True:
             next_char=self._peek()
-            if next_char != ' ' and next_char!='\n':
+            if next_char != ' ' and next_char!='\n' and next_char!='\t':
                 break
             self.file.read(1)
             
