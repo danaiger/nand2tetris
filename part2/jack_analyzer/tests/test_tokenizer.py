@@ -198,3 +198,17 @@ def test_identifier_is_tokenized_properly(tmp_path,char_outside_identifier):
         tokenizer.advance()
         assert tokenizer.get_current_token()=="identifier"
         assert tokenizer.token_type()=="IDENTIFIER"
+
+@pytest.mark.parametrize("symbol", JACK_SYMBOLS)
+def test_identifier_then_symbol(tmp_path,symbol):
+    file = tmp_path /"File.jack"
+    file.write_text(f'''identifier{symbol}''')
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=="identifier"
+        assert tokenizer.token_type()=="IDENTIFIER"
+        tokenizer.advance()
+        assert tokenizer.get_current_token()==symbol
+        assert tokenizer.token_type()=="SYMBOL"
