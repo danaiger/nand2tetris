@@ -154,3 +154,14 @@ def test_number_is_interpreted_as_digits_only(tmp_path):
         assert tokenizer.get_current_token()=='2345'
         assert tokenizer.token_type()=="INT_CONST"
  
+@pytest.mark.parametrize("symbol", JACK_SYMBOLS)
+def test_symbol_is_tokenized_as_one_character(tmp_path,symbol):
+    file = tmp_path /"File.jack"
+    file.write_text(f'''{symbol}a''')
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
+        tokenizer.advance()
+        assert tokenizer.get_current_token()==symbol
+        assert tokenizer.token_type()=="SYMBOL"
+ 

@@ -40,6 +40,9 @@ class JackTokenizer:
             else:
                 current_token+=next_char
         return current_token
+    
+    def _tokenize_symbol(self):
+        return self.file.read(1)
 
         
 
@@ -50,6 +53,8 @@ class JackTokenizer:
             current_token=self._tokenize_str()
         elif next_char.isdigit():
             current_token=self._tokenize_int_const()
+        elif next_char in JACK_SYMBOLS:
+            current_token=self._tokenize_symbol()
         else:
             current_token=''
             while True:
