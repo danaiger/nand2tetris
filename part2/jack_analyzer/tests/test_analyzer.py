@@ -1,4 +1,5 @@
 from pathlib import Path
+import pytest
 from jack_analyzer.analyzer import JackAnalyzer
 
 def test_analyzer_writes_only_token_for_empty_file(tmp_path):
@@ -12,12 +13,12 @@ def test_analyzer_writes_only_token_for_empty_file(tmp_path):
 </tokens>
 """
 
-def test_somethin():
-    file = Path("tests/test_data/ArrayTest/Main.Jack") 
-    analyzer=JackAnalyzer(file)
+TEST_DIR=Path("tests/test_data")
+@pytest.mark.parametrize("dir_name", ["ArrayTest","ExpressionLessSquare","Square"])
+def test_dirs_tokenize_as_expected(dir_name):
+    current_dir=TEST_DIR/dir_name
+    analyzer=JackAnalyzer(current_dir)
     analyzer.tokenize()
-    written_xml_file_path= Path("tests/test_data/ArrayTest/MainT.xml")
-    expected_written_xml_file_path= Path("tests/test_data/ArrayTest/expected_MainT.xml")
-    xml_written=written_xml_file_path.read_text()
-    expected_xml=expected_written_xml_file_path.read_text()
-    assert xml_written==expected_xml
+    for expected_file in current_dir.glob("expected_*T.xml"):
+        actual_file = expected_file.with_name(expected_file.name.removeprefix("expected_"))
+        assert actual_file.read_text() == expected_file.read_text()

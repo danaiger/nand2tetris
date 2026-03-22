@@ -5,11 +5,11 @@ class JackAnalyzer:
     def __init__(self,path:Path):
         self.path=path
 
-    def tokenize(self):
-        name=self.path.stem+'T'
-        path_for_artifact=self.path.parent.absolute()/(name+'.xml')
+    def _tokenize_file(self,path:Path):
+        name=path.stem+'T'
+        path_for_artifact=path.parent.absolute()/(name+'.xml')
         with open(path_for_artifact,'w') as artifact:
-            with open(self.path) as file_to_tokenize:
+            with open(path) as file_to_tokenize:
                 tokenizer=JackTokenizer(file_to_tokenize)
                 artifact.write("<tokens>\n")
                 while tokenizer.has_more_tokens():
@@ -33,3 +33,10 @@ class JackAnalyzer:
                     artifact.write(output_representation)
                     artifact.write(f" </{tokenizer.token_type().value}>\n")
                 artifact.write("</tokens>\n")
+        
+    def tokenize(self):
+        if self.path.is_file():
+            self._tokenize_file(self.path)
+        elif self.path.is_dir():
+            for file in self.path.glob("*.jack"):
+                self._tokenize_file(file)
