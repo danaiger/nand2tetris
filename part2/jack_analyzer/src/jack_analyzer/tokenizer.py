@@ -89,6 +89,16 @@ class JackTokenizer:
    
     def _ignore_if_comment(self):
         self._ignore_if_inline_comment()
+        self._ignore_if_multiline_comment()
+
+    def _ignore_if_multiline_comment(self):
+        saved_position=self.file.tell()
+        if self.file.read(2)=='/*':
+            while self._peek(2)!='*/':
+                self.file.read(1)
+            self.file.read(2)
+        else:
+            self.file.seek(saved_position)
 
     def _ignore_if_inline_comment(self):
         saved_position=self.file.tell()
