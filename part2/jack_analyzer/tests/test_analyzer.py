@@ -142,3 +142,15 @@ def test_token_type_is_identifier_for_someidentifier(tmp_path):
         tokenizer.advance()
         assert tokenizer.get_current_token()=='someidentifier'
         assert tokenizer.token_type()=="IDENTIFIER"
+    
+
+def test_number_is_interpreted_as_digits_only(tmp_path):
+    file = tmp_path /"File.jack"
+    file.write_text('''2345;''')
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        assert tokenizer.has_more_tokens()==True
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=='2345'
+        assert tokenizer.token_type()=="INT_CONST"
+ 

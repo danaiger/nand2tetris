@@ -30,11 +30,26 @@ class JackTokenizer:
                 current_token+=next_char
         return current_token+'"'
 
+    def _tokenize_int_const(self)->int:
+        current_token=self.file.read(1)
+
+        while True:
+            next_char=self.file.read(1)
+            if not next_char.isdigit():
+                break
+            else:
+                current_token+=next_char
+        return current_token
+
+        
+
     def advance(self)->None:
         self._advance_to_begin_char() 
         next_char=self._peek()
         if next_char=='"':
             current_token=self._tokenize_str()
+        elif next_char.isdigit():
+            current_token=self._tokenize_int_const()
         else:
             current_token=''
             while True:
