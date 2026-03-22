@@ -1,5 +1,5 @@
 import pytest
-from jack_analyzer.tokenizer import JACK_SYMBOLS, JackTokenizer
+from jack_analyzer.tokenizer import JACK_SYMBOLS, JackTokenizer, TokenType
 from jack_analyzer.tokenizer import JACK_KEYWORDS
 
 def test_has_more_tokens_is_false_on_spaces_and_newlines_and_tabs(tmp_path):
@@ -36,12 +36,11 @@ def test_has_more_tokens_is_false_for_two_mutiline_comments(tmp_path):
     with open(file) as f:
         tokenizer=JackTokenizer(f)
         assert tokenizer.has_more_tokens()==False
-        
 
 def test_has_more_tokens_is_false_for_multiline_comment(tmp_path):
     file = tmp_path /"File.jack"
-    file.write_text(""" \n   /* a  
-                    multiline 
+    file.write_text(""" \n   /* a
+                    multiline
                     comment
                     */""")
     with open(file) as f:
@@ -99,7 +98,7 @@ def test_token_type_is_keyword_for_keywords(tmp_path,name):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()==f"{name}"
-        assert tokenizer.token_type()=="KEYWORD"
+        assert tokenizer.token_type()==TokenType.keyword
 
 @pytest.mark.parametrize("name", JACK_SYMBOLS)
 def test_token_type_is_symbol_for_symbols(tmp_path,name):
@@ -110,7 +109,7 @@ def test_token_type_is_symbol_for_symbols(tmp_path,name):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()==f"{name}"
-        assert tokenizer.token_type()=="SYMBOL"
+        assert tokenizer.token_type()==TokenType.symbol
 
 def test_token_type_is_string_const_for_somestring(tmp_path):
     file = tmp_path /"File.jack"
@@ -120,7 +119,7 @@ def test_token_type_is_string_const_for_somestring(tmp_path):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()=='"somestring"'
-        assert tokenizer.token_type()=="STRING_CONST"
+        assert tokenizer.token_type()==TokenType.string_const
 
 def test_token_type_is_int_const_for_arbitrary_number(tmp_path):
     file = tmp_path /"File.jack"
@@ -130,7 +129,7 @@ def test_token_type_is_int_const_for_arbitrary_number(tmp_path):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()=='1235'
-        assert tokenizer.token_type()=="INT_CONST"
+        assert tokenizer.token_type()==TokenType.int_const
 
 def test_number_then_symbol(tmp_path):
     file = tmp_path /"File.jack"
@@ -163,8 +162,8 @@ def test_token_type_is_identifier_for_someidentifier(tmp_path):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()=='someidentifier'
-        assert tokenizer.token_type()=="IDENTIFIER"
-    
+        assert tokenizer.token_type()==TokenType.identifier
+
 
 def test_number_is_interpreted_as_digits_only(tmp_path):
     file = tmp_path /"File.jack"
@@ -174,8 +173,8 @@ def test_number_is_interpreted_as_digits_only(tmp_path):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()=='2345'
-        assert tokenizer.token_type()=="INT_CONST"
- 
+        assert tokenizer.token_type()==TokenType.int_const
+
 @pytest.mark.parametrize("symbol", JACK_SYMBOLS)
 def test_symbol_is_tokenized_as_one_character(tmp_path,symbol):
     file = tmp_path /"File.jack"
@@ -185,7 +184,7 @@ def test_symbol_is_tokenized_as_one_character(tmp_path,symbol):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()==symbol
-        assert tokenizer.token_type()=="SYMBOL"
+        assert tokenizer.token_type()==TokenType.symbol
 
 CHAR_OUTSIDE_IDENTIFIER=JACK_SYMBOLS.union({'',' ','\n','"'})
 @pytest.mark.parametrize("char_outside_identifier", CHAR_OUTSIDE_IDENTIFIER)
@@ -197,7 +196,7 @@ def test_identifier_is_tokenized_properly(tmp_path,char_outside_identifier):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()=="identifier"
-        assert tokenizer.token_type()=="IDENTIFIER"
+        assert tokenizer.token_type()==TokenType.identifier
 
 @pytest.mark.parametrize("symbol", JACK_SYMBOLS)
 def test_identifier_then_symbol(tmp_path,symbol):
@@ -208,7 +207,7 @@ def test_identifier_then_symbol(tmp_path,symbol):
         assert tokenizer.has_more_tokens()==True
         tokenizer.advance()
         assert tokenizer.get_current_token()=="identifier"
-        assert tokenizer.token_type()=="IDENTIFIER"
+        assert tokenizer.token_type()==TokenType.identifier
         tokenizer.advance()
         assert tokenizer.get_current_token()==symbol
-        assert tokenizer.token_type()=="SYMBOL"
+        assert tokenizer.token_type()==TokenType.symbol

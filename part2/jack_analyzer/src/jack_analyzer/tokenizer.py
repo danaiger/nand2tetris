@@ -1,4 +1,13 @@
+from enum import Enum
 from typing import TextIO
+
+
+class TokenType(str, Enum):
+    keyword = "keyword"
+    symbol = "symbol"
+    string_const = "string_const"
+    int_const = "int_const"
+    identifier = "identifier"
 
 JACK_KEYWORDS={'class','constructor','function',
          'method','field','static','var',
@@ -65,17 +74,17 @@ class JackTokenizer:
                     current_token+=self.file.read(1)
         self.current_token=current_token
 
-    def token_type(self)->str:
+    def token_type(self)->TokenType:
         if self.current_token.startswith('"'):
-            return "STRING_CONST"
+            return TokenType.string_const
         elif self.current_token in JACK_SYMBOLS:
-            return "SYMBOL"
+            return TokenType.symbol
         elif self.current_token[0].isdigit():
-            return "INT_CONST"
+            return TokenType.int_const
         elif self.current_token in JACK_KEYWORDS:
-            return "KEYWORD"
+            return TokenType.keyword
         else:
-            return "IDENTIFIER"
+            return TokenType.identifier
 
     def has_more_tokens(self)->bool:
         place_to_return=self.file.tell()
