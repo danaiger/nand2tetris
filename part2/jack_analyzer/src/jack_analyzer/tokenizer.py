@@ -116,7 +116,7 @@ class JackTokenizer:
         return next_chars
 
     def _is_comment(self)->bool:
-        if self._peek(2)=='//':
+        if self._peek(2)=='//' or self._peek(2)=='/*':
             return True
         else: 
             return False
