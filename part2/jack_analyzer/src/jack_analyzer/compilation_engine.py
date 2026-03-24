@@ -38,7 +38,11 @@ class CompilationEngine:
 
     @_xml_tag("parameterList")
     def _compile_parameter_list(self):
-        pass
+        if self.tokenizer.get_current_token()==')':
+            return
+        self._compile_atom_and_advance_repeatedly(2)
+        while self.tokenizer.get_current_token()==',':
+            self._compile_atom_and_advance_repeatedly(3)
 
     @_xml_tag("returnStatement")
     def _compile_return_statement(self):
