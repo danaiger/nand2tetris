@@ -15,7 +15,10 @@ class CompilationEngine:
     def compile_class_var_dec(self):
         self.output_file.write(f"{' '*self.indentation_spaces}<classVarDec>\n")
         self.indentation_spaces+=2
-        self._compile_atom_and_advance_repeatedly(4)
+        self._compile_atom_and_advance_repeatedly(3)
+        while self.tokenizer.get_current_token()!=';':
+            self._compile_atom_and_advance_repeatedly(2)
+        self._compile_atom_and_advance_repeatedly(1)
         self.indentation_spaces-=2
         self.output_file.write(f"{' '*self.indentation_spaces}</classVarDec>\n")
 
