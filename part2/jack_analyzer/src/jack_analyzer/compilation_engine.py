@@ -52,9 +52,15 @@ class CompilationEngine:
     def _compile_statements(self):
         self._compile_return_statement()
 
+    @_xml_tag("varDec")
+    def _compile_var_dec(self):
+        self._compile_atom_and_advance_repeatedly(4)
+
     @_xml_tag("subroutineBody")
     def _compile_subroutine_body(self):
         self._compile_atom_and_advance_repeatedly(1)
+        if self.tokenizer.get_current_token()=="var":
+            self._compile_var_dec()
         self._compile_statements()
         self._compile_atom_and_advance_repeatedly(1)
 
