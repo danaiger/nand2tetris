@@ -23,13 +23,17 @@ class CompilationEngine:
 
     def compile_atom(self):
         self.output_file.write(f"{' '*self.indentation_spaces}<{self.tokenizer.token_type().value}> {self.tokenizer.get_current_token()} </{self.tokenizer.token_type().value}>\n")
-
-    @_xml_tag("classVarDec")
-    def compile_class_var_dec(self):
+    
+    def _compile_var_dec(self):
         self._compile_atom_and_advance_repeatedly(3)
         while self.tokenizer.get_current_token()!=';':
             self._compile_atom_and_advance_repeatedly(2)
         self._compile_atom_and_advance_repeatedly(1)
+
+
+    @_xml_tag("classVarDec")
+    def _compile_class_var_dec(self):
+        self._compile_var_dec()
 
     def _compile_atom_and_advance_repeatedly(self,times:int)->None:
         for _ in range(times):
@@ -53,14 +57,14 @@ class CompilationEngine:
         self._compile_return_statement()
 
     @_xml_tag("varDec")
-    def _compile_var_dec(self):
-        self._compile_atom_and_advance_repeatedly(4)
+    def _compile_subroutine_var_dec(self):
+        self._compile_var_dec()
 
     @_xml_tag("subroutineBody")
     def _compile_subroutine_body(self):
         self._compile_atom_and_advance_repeatedly(1)
         while self.tokenizer.get_current_token()=="var":
-            self._compile_var_dec()
+            self._compile_subroutine_var_dec()
         self._compile_statements()
         self._compile_atom_and_advance_repeatedly(1)
 
@@ -76,7 +80,7 @@ class CompilationEngine:
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(3)
         while self.tokenizer.get_current_token() in ["field","static"]:
-            self.compile_class_var_dec()
+            self._compile_class_var_dec()
         while self.tokenizer.get_current_token() in ["constructor","function","method"]:
             self.compile_subroutine_dec()
         self.compile_atom()
