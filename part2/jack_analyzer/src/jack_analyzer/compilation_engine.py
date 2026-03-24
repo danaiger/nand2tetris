@@ -48,12 +48,28 @@ class CompilationEngine:
         while self.tokenizer.get_current_token()==',':
             self._compile_atom_and_advance_repeatedly(3)
 
+    @_xml_tag("term")
+    def _compile_term(self):
+        self._compile_atom_and_advance_repeatedly(1)
+
+    @_xml_tag("expression")
+    def _compile_expression(self):
+        self._compile_term()
+
+    @_xml_tag("letStatement")
+    def _compile_let_statement(self):
+        self._compile_atom_and_advance_repeatedly(3)
+        self._compile_expression()
+        self._compile_atom_and_advance_repeatedly(1)
+
     @_xml_tag("returnStatement")
     def _compile_return_statement(self):
         self._compile_atom_and_advance_repeatedly(2)
 
     @_xml_tag("statements")
     def _compile_statements(self):
+        if self.tokenizer.get_current_token()=="let":
+            self._compile_let_statement()
         self._compile_return_statement()
 
     @_xml_tag("varDec")
