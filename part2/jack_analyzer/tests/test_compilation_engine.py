@@ -12,7 +12,8 @@ def test_class_without_class_var_dec_and_without_subroutine(tmp_path):
   <identifier> SomeClass </identifier>
   <symbol> { </symbol>
   <symbol> } </symbol>
-</class>"""
+</class>
+"""
 
 def test_basic_class_var_dec(tmp_path):
     input_path = tmp_path /"input_file"
@@ -34,7 +35,8 @@ def test_basic_class_var_dec(tmp_path):
     <symbol> ; </symbol>
   </classVarDec>
   <symbol> } </symbol>
-</class>"""
+</class>
+"""
 
 def test_multiple_basic_class_var_dec(tmp_path):
     input_path = tmp_path /"input_file"
@@ -63,7 +65,8 @@ def test_multiple_basic_class_var_dec(tmp_path):
     <symbol> ; </symbol>
   </classVarDec>
   <symbol> } </symbol>
-</class>"""
+</class>
+"""
 
 def test_multiple_inline_class_var_dec(tmp_path):
     input_path = tmp_path /"input_file"
@@ -87,5 +90,6 @@ def test_multiple_inline_class_var_dec(tmp_path):
     <symbol> ; </symbol>
   </classVarDec>
   <symbol> } </symbol>
-</class>"""
+</class>
+"""
 
