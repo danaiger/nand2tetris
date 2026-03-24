@@ -13,17 +13,17 @@ class CompilationEngine:
         self.output_file.write(f"{' '*self.indentation_spaces}<{self.tokenizer.token_type().value}> {self.tokenizer.get_current_token()} </{self.tokenizer.token_type().value}>\n")
     
     def compile_class_var_dec(self):
-        self.output_file.write("  <classVarDec>\n")
+        self.output_file.write(f"{' '*self.indentation_spaces}<classVarDec>\n")
         self.indentation_spaces+=2
-        self.compile_atom()
-        self.tokenizer.advance()
-        self.compile_atom()
-        self.tokenizer.advance()
-        self.compile_atom()
-        self.tokenizer.advance()
-        self.compile_atom()
+        self._compile_atom_and_advance_repeatedly(4)
         self.indentation_spaces-=2
-        self.output_file.write("  </classVarDec>\n")
+        self.output_file.write(f"{' '*self.indentation_spaces}</classVarDec>\n")
+
+    def _compile_atom_and_advance_repeatedly(self,times:int)->None:
+        for _ in range(times):
+            self.compile_atom() 
+            self.tokenizer.advance()
+        
 
     def compile_subroutine_dec(self):
         pass
@@ -32,15 +32,9 @@ class CompilationEngine:
         self.output_file.write("<class>\n")
         self.indentation_spaces+=2
         self.tokenizer.advance()
-        self.compile_atom() #class keyword
-        self.tokenizer.advance()
-        self.compile_atom() #className
-        self.tokenizer.advance()
-        self.compile_atom() #{
-        self.tokenizer.advance()
+        self._compile_atom_and_advance_repeatedly(3)
         while self.tokenizer.get_current_token() in ["field","static"]:
             self.compile_class_var_dec()
-            self.tokenizer.advance()
         while self.tokenizer.get_current_token() in ["constructor","function","method"]:
             self.compile_subroutine_dec()
             self.tokenizer.advance()
