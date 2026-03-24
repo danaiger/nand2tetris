@@ -35,9 +35,31 @@ class CompilationEngine:
         for _ in range(times):
             self.compile_atom() 
             self.tokenizer.advance()
-        
-    def compile_subroutine_dec(self):
+
+    @_xml_tag("parameterList")
+    def _compile_parameter_list(self):
         pass
+
+    @_xml_tag("returnStatement")
+    def _compile_return_statement(self):
+        self._compile_atom_and_advance_repeatedly(2)
+
+    @_xml_tag("statements")
+    def _compile_statements(self):
+        self._compile_return_statement()
+
+    @_xml_tag("subroutineBody")
+    def _compile_subroutine_body(self):
+        self._compile_atom_and_advance_repeatedly(1)
+        self._compile_statements()
+        self._compile_atom_and_advance_repeatedly(1)
+
+    @_xml_tag("subroutineDec")
+    def compile_subroutine_dec(self):
+        self._compile_atom_and_advance_repeatedly(4)
+        self._compile_parameter_list()
+        self._compile_atom_and_advance_repeatedly(1)
+        self._compile_subroutine_body()
 
     @_xml_tag("class")
     def compile_class(self):
@@ -47,5 +69,4 @@ class CompilationEngine:
             self.compile_class_var_dec()
         while self.tokenizer.get_current_token() in ["constructor","function","method"]:
             self.compile_subroutine_dec()
-            self.tokenizer.advance()
         self.compile_atom()
