@@ -1,6 +1,7 @@
 from pathlib import Path
-from jack_analyzer.tokenizer import JackTokenizer,TokenType
+from jack_analyzer.tokenizer import JackTokenizer
 from jack_analyzer.compilation_engine import CompilationEngine
+from jack_analyzer.utils import format_output
 
 class JackAnalyzer:
     def __init__(self,path:Path):
@@ -17,19 +18,7 @@ class JackAnalyzer:
                     tokenizer.advance()
                     current_token_type=tokenizer.token_type()
                     current_token=tokenizer.get_current_token()
-                    if current_token_type==TokenType.string_const:
-                        output_representation=(current_token[1:-1])
-                    elif current_token_type==TokenType.symbol and current_token in ['<','>','"','&']:
-                        if current_token == '<':
-                            output_representation='&lt;'
-                        elif current_token == '>':
-                            output_representation='&gt;'
-                        elif current_token == '"':
-                            output_representation='&quot;'
-                        elif current_token == '&':
-                            output_representation='&amp;'
-                    else:
-                        output_representation=current_token
+                    output_representation=format_output(current_token,current_token_type)
                     artifact.write(f"<{tokenizer.token_type().value}> ")
                     artifact.write(output_representation)
                     artifact.write(f" </{tokenizer.token_type().value}>\n")
@@ -53,5 +42,4 @@ class JackAnalyzer:
             self._analyze_file(self.path)
         elif self.path.is_dir():
             for file in self.path.glob("*.jack"):
-                print(file)
                 self._analyze_file(file)

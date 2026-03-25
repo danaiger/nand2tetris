@@ -37,3 +37,13 @@ def test_analyzing_correctly_a_dir_with_only_expressionless_files():
     for expected_file in current_dir.glob("expected_*[!T].xml"):
         actual_file = expected_file.with_name(expected_file.name.removeprefix("expected_"))
         assert actual_file.read_text() == expected_file.read_text()
+
+@pytest.mark.parametrize("dir_name", ["ArrayTest","ExpressionLessSquare","Square"])
+def test_dirs_analyzed_as_expected(dir_name):
+    current_dir=TEST_DIR/dir_name
+    analyzer=JackAnalyzer(current_dir)
+    analyzer.analyze()
+    for expected_file in current_dir.glob("expected_*[!T].xml"):
+        actual_file = expected_file.with_name(expected_file.name.removeprefix("expected_"))
+        assert actual_file.read_text() == expected_file.read_text()
+ 

@@ -1,4 +1,5 @@
 from typing import TextIO
+from jack_analyzer.utils import format_output
 from jack_analyzer.tokenizer import JackTokenizer
 
 def _xml_tag(name:str):
@@ -25,7 +26,10 @@ class CompilationEngine:
         self.compile_class()
 
     def compile_atom(self):
-        self.output_file.write(f"{' '*self.indentation_spaces}<{self.tokenizer.token_type().value}> {self.tokenizer.get_current_token()} </{self.tokenizer.token_type().value}>\n")
+        current_token_type=self.tokenizer.token_type()
+        current_token=self.tokenizer.get_current_token()
+        output=format_output(current_token,current_token_type)
+        self.output_file.write(f"{' '*self.indentation_spaces}<{current_token_type.value}> {output} </{current_token_type.value}>\n")
     
     def _compile_var_dec(self):
         self._compile_atom_and_advance_repeatedly(3)
