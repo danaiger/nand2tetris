@@ -66,6 +66,8 @@ class CompilationEngine:
                 self._compile_atom_and_advance_repeatedly(1)
                 self._compile_expression()
                 self._compile_atom_and_advance_repeatedly(1)
+            elif self.tokenizer.get_current_token() in ['(','.']:
+                self._compile_subroutine_call_from_end_of_identifier()
 
     @_xml_tag("expression")
     def _compile_expression(self):
@@ -115,8 +117,7 @@ class CompilationEngine:
             if self.tokenizer.get_current_token()==',':
                 self._compile_atom_and_advance_repeatedly(1)
             
-    def _compile_subroutine_call(self):
-        self._compile_atom_and_advance_repeatedly(1)
+    def _compile_subroutine_call_from_end_of_identifier(self):
         if self.tokenizer.get_current_token()=='.':
             self._compile_atom_and_advance_repeatedly(3)
         elif self.tokenizer.get_current_token()=='(':
@@ -129,8 +130,8 @@ class CompilationEngine:
 
     @_xml_tag("doStatement")
     def _compile_do_statement(self):
-        self._compile_atom_and_advance_repeatedly(1)
-        self._compile_subroutine_call()
+        self._compile_atom_and_advance_repeatedly(2)
+        self._compile_subroutine_call_from_end_of_identifier()
         self._compile_atom_and_advance_repeatedly(1)
         
 
