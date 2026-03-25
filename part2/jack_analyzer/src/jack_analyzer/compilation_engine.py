@@ -1,6 +1,7 @@
 from typing import TextIO
 from jack_analyzer.utils import format_output
 from jack_analyzer.tokenizer import JackTokenizer
+from jack_analyzer.consts import JACK_OPERATIONS,UNARY_OPERATIONS
 
 def _xml_tag(name:str):
     def decorator(func):
@@ -13,8 +14,6 @@ def _xml_tag(name:str):
         return wrapper
     return decorator
 
-JACK_OPERATIONS={'+','-','*','/','&','|','<','>','='}
-UNARY_OPERATIONS={'-','~'}
 
 class CompilationEngine:
 

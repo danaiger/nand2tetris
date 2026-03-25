@@ -1,22 +1,5 @@
-from enum import Enum
 from typing import TextIO
-
-
-class TokenType(str, Enum):
-    keyword = "keyword"
-    symbol = "symbol"
-    string_const = "stringConstant"
-    int_const = "integerConstant"
-    identifier = "identifier"
-
-JACK_KEYWORDS={'class','constructor','function',
-         'method','field','static','var',
-         'int','char','boolean','void','true',
-         'false','null','this','let','do','if',
-         'else','while','return'}
-JACK_SYMBOLS={
-    '{','}','(',')','[',']','.',',',';','+','-','*','/','&','|','<','>','=','-','~'
-}
+from jack_analyzer.consts import TokenType,JACK_KEYWORDS,JACK_SYMBOLS
 
 
 class JackTokenizer:
