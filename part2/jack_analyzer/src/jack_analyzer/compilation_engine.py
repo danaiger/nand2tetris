@@ -79,7 +79,12 @@ class CompilationEngine:
 
     @_xml_tag("letStatement")
     def _compile_let_statement(self):
-        self._compile_atom_and_advance_repeatedly(3)
+        self._compile_atom_and_advance_repeatedly(2)
+        if self.tokenizer.get_current_token()=="[":
+            self._compile_atom_and_advance_repeatedly(1)
+            self._compile_expression()
+            self._compile_atom_and_advance_repeatedly(1)
+        self._compile_atom_and_advance_repeatedly(1)
         self._compile_expression()
         self._compile_atom_and_advance_repeatedly(1)
 

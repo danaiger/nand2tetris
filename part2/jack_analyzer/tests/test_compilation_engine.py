@@ -461,6 +461,63 @@ def test_let_statement_degenerate_expression(tmp_path):
 </class>
 """
 
+def test_let_statement_when_assigning_to_array_degenerate_expression(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method void draw() {
+        let a[1] = somevar;
+        return;}
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,output_file)
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier> SomeClass </identifier>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier> draw </identifier>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <statements>
+        <letStatement>
+          <keyword> let </keyword>
+          <identifier> a </identifier>
+          <symbol> [ </symbol>
+          <expression>
+            <term>
+              <integerConstant> 1 </integerConstant>
+            </term>
+          </expression>
+          <symbol> ] </symbol>
+          <symbol> = </symbol>
+          <expression>
+            <term>
+              <identifier> somevar </identifier>
+            </term>
+          </expression>
+          <symbol> ; </symbol>
+        </letStatement>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
+
+
 def test_multiple_let_statement_degenerate_expression(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
