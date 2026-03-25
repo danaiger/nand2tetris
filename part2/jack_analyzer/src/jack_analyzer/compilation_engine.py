@@ -65,12 +65,24 @@ class CompilationEngine:
     @_xml_tag("returnStatement")
     def _compile_return_statement(self):
         self._compile_atom_and_advance_repeatedly(2)
+    
+    @_xml_tag("ifStatement")
+    def _compile_if_statement(self):
+        self._compile_atom_and_advance_repeatedly(2)
+        self._compile_expression()
+        self._compile_atom_and_advance_repeatedly(2)
+        self._compile_statements()
+        self._compile_atom_and_advance_repeatedly(1)
 
     @_xml_tag("statements")
     def _compile_statements(self):
-        if self.tokenizer.get_current_token()=="let":
-            self._compile_let_statement()
-        self._compile_return_statement()
+        while self.tokenizer.get_current_token() in ["let","if","return"]:
+            if self.tokenizer.get_current_token()=="let":
+                self._compile_let_statement()
+            elif self.tokenizer.get_current_token()=="if":
+                self._compile_if_statement()
+            elif self.tokenizer.get_current_token()=="return":
+                self._compile_return_statement()
 
     @_xml_tag("varDec")
     def _compile_subroutine_var_dec(self):
