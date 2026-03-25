@@ -93,7 +93,13 @@ class CompilationEngine:
 
     @_xml_tag("doStatement")
     def _compile_do_statement(self):
-        self._compile_atom_and_advance_repeatedly(3)
+        self._compile_atom_and_advance_repeatedly(2)
+        if self.tokenizer.get_current_token()=='.':
+            self._compile_atom_and_advance_repeatedly(3)
+        elif self.tokenizer.get_current_token()=='(':
+            self._compile_atom_and_advance_repeatedly(1)
+        else:
+            raise ValueError("wrong syntax")
         self._compile_expression_list()
         self._compile_atom_and_advance_repeatedly(2)
         
