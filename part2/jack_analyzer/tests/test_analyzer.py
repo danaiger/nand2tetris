@@ -29,3 +29,11 @@ def test_analyzing_correctly_an_expressionless_file(tmp_path):
     analyzed_file_path=(TEST_DIR/"ExpressionLessSquare/Main.xml")
     expected_file_path=(TEST_DIR/"ExpressionLessSquare/expected_Main.xml")
     assert expected_file_path.read_text()==analyzed_file_path.read_text()
+    
+def test_analyzing_correctly_a_dir_with_only_expressionless_files(tmp_path):
+    current_dir=TEST_DIR/"ExpressionLessSquare"
+    analyzer=JackAnalyzer(current_dir)
+    analyzer.analyze()
+    for expected_file in current_dir.glob("expected_*[!T].xml"):
+        actual_file = expected_file.with_name(expected_file.name.removeprefix("expected_"))
+        assert actual_file.read_text() == expected_file.read_text()

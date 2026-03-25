@@ -42,7 +42,16 @@ class JackAnalyzer:
             for file in self.path.glob("*.jack"):
                 self._tokenize_file(file)
     
-    def analyze(self):
-        with open(self.path) as input_file:
-            with open(self.path.with_suffix(".xml"),'w') as output_file:
+    def _analyze_file(self,path):
+        with open(path) as input_file:
+            with open(path.with_suffix(".xml"),'w') as output_file:
                 CompilationEngine(input_file,output_file)
+
+    
+    def analyze(self):
+        if self.path.is_file():
+            self._analyze_file(self.path)
+        elif self.path.is_dir():
+            for file in self.path.glob("*.jack"):
+                print(file)
+                self._analyze_file(file)
