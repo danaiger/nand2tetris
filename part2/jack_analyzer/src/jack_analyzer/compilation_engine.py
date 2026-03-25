@@ -88,8 +88,10 @@ class CompilationEngine:
     
     @_xml_tag("expressionList")
     def _compile_expression_list(self):
-        if self.tokenizer.get_current_token()!=')':
+        while self.tokenizer.get_current_token()!=')':
             self._compile_expression()
+            if self.tokenizer.get_current_token()==',':
+                self._compile_atom_and_advance_repeatedly(1)
 
 
     @_xml_tag("doStatement")
