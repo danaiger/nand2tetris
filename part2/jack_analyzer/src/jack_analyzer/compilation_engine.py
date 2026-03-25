@@ -73,6 +73,10 @@ class CompilationEngine:
         self._compile_atom_and_advance_repeatedly(2)
         self._compile_statements()
         self._compile_atom_and_advance_repeatedly(1)
+        if self.tokenizer.get_current_token()=="else":
+            self._compile_atom_and_advance_repeatedly(2)
+            self._compile_statements()
+            self._compile_atom_and_advance_repeatedly(1)
 
     @_xml_tag("statements")
     def _compile_statements(self):
