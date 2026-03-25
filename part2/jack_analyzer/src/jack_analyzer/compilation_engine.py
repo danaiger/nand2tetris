@@ -114,11 +114,9 @@ class CompilationEngine:
             self._compile_expression()
             if self.tokenizer.get_current_token()==',':
                 self._compile_atom_and_advance_repeatedly(1)
-
-
-    @_xml_tag("doStatement")
-    def _compile_do_statement(self):
-        self._compile_atom_and_advance_repeatedly(2)
+            
+    def _compile_subroutine_call(self):
+        self._compile_atom_and_advance_repeatedly(1)
         if self.tokenizer.get_current_token()=='.':
             self._compile_atom_and_advance_repeatedly(3)
         elif self.tokenizer.get_current_token()=='(':
@@ -126,7 +124,14 @@ class CompilationEngine:
         else:
             raise ValueError("wrong syntax")
         self._compile_expression_list()
-        self._compile_atom_and_advance_repeatedly(2)
+        self._compile_atom_and_advance_repeatedly(1)
+
+
+    @_xml_tag("doStatement")
+    def _compile_do_statement(self):
+        self._compile_atom_and_advance_repeatedly(1)
+        self._compile_subroutine_call()
+        self._compile_atom_and_advance_repeatedly(1)
         
 
     @_xml_tag("statements")
