@@ -85,11 +85,22 @@ class CompilationEngine:
         self._compile_atom_and_advance_repeatedly(2)
         self._compile_statements()
         self._compile_atom_and_advance_repeatedly(1)
+    
+    @_xml_tag("expressionList")
+    def _compile_expression_list(self):
+        pass
+
+
+    @_xml_tag("doStatement")
+    def _compile_do_statement(self):
+        self._compile_atom_and_advance_repeatedly(3)
+        self._compile_expression_list()
+        self._compile_atom_and_advance_repeatedly(2)
         
 
     @_xml_tag("statements")
     def _compile_statements(self):
-        while self.tokenizer.get_current_token() in ["let","if","return","while"]:
+        while self.tokenizer.get_current_token() in ["let","if","return","while","do"]:
             if self.tokenizer.get_current_token()=="let":
                 self._compile_let_statement()
             elif self.tokenizer.get_current_token()=="if":
@@ -98,6 +109,8 @@ class CompilationEngine:
                 self._compile_return_statement()
             elif self.tokenizer.get_current_token()=="while":
                 self._compile_while_statement()
+            elif self.tokenizer.get_current_token()=="do":
+                self._compile_do_statement()
 
     @_xml_tag("varDec")
     def _compile_subroutine_var_dec(self):
