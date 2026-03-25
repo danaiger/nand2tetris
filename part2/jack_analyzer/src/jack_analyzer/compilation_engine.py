@@ -64,7 +64,10 @@ class CompilationEngine:
 
     @_xml_tag("returnStatement")
     def _compile_return_statement(self):
-        self._compile_atom_and_advance_repeatedly(2)
+        self._compile_atom_and_advance_repeatedly(1)
+        if self.tokenizer.get_current_token()!=';':
+            self._compile_expression()
+        self._compile_atom_and_advance_repeatedly(1)
     
     @_xml_tag("ifStatement")
     def _compile_if_statement(self):

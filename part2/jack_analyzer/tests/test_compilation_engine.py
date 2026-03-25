@@ -322,6 +322,49 @@ def test_subroutine_with_multiple_var_declarations(tmp_path):
 </class>
 """
 
+def test_return_with_degenerate_expression_no_array(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method void draw() {
+        return x;}
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,output_file)
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier> SomeClass </identifier>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier> draw </identifier>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <statements>
+        <returnStatement>
+          <keyword> return </keyword>
+          <expression>
+            <term>
+              <identifier> x </identifier>
+            </term>
+          </expression>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
+
+
 def test_subroutine_with_multiple_inline_var_declarations(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
