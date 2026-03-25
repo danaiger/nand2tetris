@@ -12,6 +12,8 @@ def _xml_tag(name:str):
         return wrapper
     return decorator
 
+JACK_OPERATIONS={'+','-','*','/','&','|','<','>','='}
+
 class CompilationEngine:
 
     def __init__(self,input_file:TextIO,output_file:TextIO):
@@ -55,6 +57,10 @@ class CompilationEngine:
     @_xml_tag("expression")
     def _compile_expression(self):
         self._compile_term()
+        while self.tokenizer.get_current_token() in JACK_OPERATIONS:
+            self._compile_atom_and_advance_repeatedly(1)
+            self._compile_term()
+        
 
     @_xml_tag("letStatement")
     def _compile_let_statement(self):
