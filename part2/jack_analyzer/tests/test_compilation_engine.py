@@ -322,7 +322,7 @@ def test_subroutine_with_multiple_var_declarations(tmp_path):
 </class>
 """
 
-def test_return_with_degenerate_expression_no_array(tmp_path):
+def test_return_with_degenerate_expression(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -412,7 +412,7 @@ def test_subroutine_with_multiple_inline_var_declarations(tmp_path):
 </class>
 """
 
-def test_let_statement_degenerate_expression_no_array(tmp_path):
+def test_let_statement_degenerate_expression(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -461,7 +461,7 @@ def test_let_statement_degenerate_expression_no_array(tmp_path):
 </class>
 """
 
-def test_multiple_let_statement_degenerate_expression_no_array(tmp_path):
+def test_multiple_let_statement_degenerate_expression(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -522,7 +522,7 @@ def test_multiple_let_statement_degenerate_expression_no_array(tmp_path):
 </class>
 """
 
-def test_if_statement_degenerate_expression_no_array_no_else(tmp_path):
+def test_if_statement_degenerate_expression_no_else(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -587,7 +587,7 @@ def test_if_statement_degenerate_expression_no_array_no_else(tmp_path):
 </class>
 """
 
-def test_if_statement_degenerate_expression_no_array(tmp_path):
+def test_if_statement_degenerate_expression(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -648,7 +648,7 @@ def test_if_statement_degenerate_expression_no_array(tmp_path):
 """
 
 
-def test_while_statement_degenerate_expression_no_array(tmp_path):
+def test_while_statement_degenerate_expression(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -713,7 +713,7 @@ def test_while_statement_degenerate_expression_no_array(tmp_path):
 </class>
 """
 
-def test_do_statement_for_functions_degenerate_expression_no_array(tmp_path):
+def test_do_statement_for_functions_degenerate_expression(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -760,7 +760,7 @@ def test_do_statement_for_functions_degenerate_expression_no_array(tmp_path):
 </class>
 """
 
-def test_do_statement_for_methods_degenerate_expression_no_array(tmp_path):
+def test_do_statement_for_methods_degenerate_expression(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
