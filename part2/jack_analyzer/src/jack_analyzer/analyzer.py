@@ -1,5 +1,6 @@
 from pathlib import Path
 from jack_analyzer.tokenizer import JackTokenizer,TokenType
+from jack_analyzer.compilation_engine import CompilationEngine
 
 class JackAnalyzer:
     def __init__(self,path:Path):
@@ -40,3 +41,8 @@ class JackAnalyzer:
         elif self.path.is_dir():
             for file in self.path.glob("*.jack"):
                 self._tokenize_file(file)
+    
+    def analyze(self):
+        with open(self.path) as input_file:
+            with open(self.path.with_suffix(".xml"),'w') as output_file:
+                CompilationEngine(input_file,output_file)
