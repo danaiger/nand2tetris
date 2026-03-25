@@ -1110,3 +1110,60 @@ def test_unary_op_term(tmp_path):
   <symbol> } </symbol>
 </class>
 """
+
+
+def test_access_array_term(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method void draw() {
+        let somevar = a[2];
+        return;}
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,output_file)
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier> SomeClass </identifier>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier> draw </identifier>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <statements>
+        <letStatement>
+          <keyword> let </keyword>
+          <identifier> somevar </identifier>
+          <symbol> = </symbol>
+          <expression>
+            <term>
+              <identifier> a </identifier>
+              <symbol> [ </symbol>
+              <expression>
+                <term>
+                  <integerConstant> 2 </integerConstant>
+                </term>
+              </expression>
+              <symbol> ] </symbol>
+            </term>
+          </expression>
+          <symbol> ; </symbol>
+        </letStatement>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""

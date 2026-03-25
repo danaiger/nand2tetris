@@ -62,6 +62,10 @@ class CompilationEngine:
             self._compile_term()
         else:
             self._compile_atom_and_advance_repeatedly(1)
+            if self.tokenizer.get_current_token()=='[':
+                self._compile_atom_and_advance_repeatedly(1)
+                self._compile_expression()
+                self._compile_atom_and_advance_repeatedly(1)
 
     @_xml_tag("expression")
     def _compile_expression(self):
