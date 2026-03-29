@@ -1,4 +1,4 @@
-from jack_analyzer.compilation_engine import CompilationEngine
+from jack_analyzer.compilation_engine import CompilationEngine,XMLWriter
 
 def test_class_without_class_var_dec_and_without_subroutine(tmp_path):
     input_path = tmp_path /"input_file"
@@ -6,7 +6,7 @@ def test_class_without_class_var_dec_and_without_subroutine(tmp_path):
     input_path.write_text("""class SomeClass {}""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -23,7 +23,7 @@ def test_basic_class_var_dec(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -47,7 +47,7 @@ def test_multiple_basic_class_var_dec(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -76,7 +76,7 @@ def test_multiple_inline_class_var_dec(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -101,7 +101,7 @@ def test_basic_subroutine_declaration(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -138,7 +138,7 @@ def test_multiple_basic_subroutine_declarations(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -193,7 +193,7 @@ def test_subroutine_with_parameters_list(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -236,7 +236,7 @@ def test_subroutine_with_var_declaration(tmp_path):
     }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -282,7 +282,7 @@ def test_subroutine_with_multiple_var_declarations(tmp_path):
     }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -331,7 +331,7 @@ def test_return_with_degenerate_expression(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -376,7 +376,7 @@ def test_subroutine_with_multiple_inline_var_declarations(tmp_path):
     }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -422,7 +422,7 @@ def test_let_statement_degenerate_expression(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -471,7 +471,7 @@ def test_let_statement_when_assigning_to_array_degenerate_expression(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -529,7 +529,7 @@ def test_multiple_let_statement_degenerate_expression(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -591,7 +591,7 @@ def test_if_statement_degenerate_expression_no_else(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -657,7 +657,7 @@ def test_if_statement_degenerate_expression(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -717,7 +717,7 @@ def test_while_statement_degenerate_expression(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -780,7 +780,7 @@ def test_do_statement_for_functions_degenerate_expression(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -827,7 +827,7 @@ def test_do_statement_for_methods_degenerate_expression(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -877,7 +877,7 @@ def test_do_statement_for_subroutine_with_single_degenerate_expression(tmp_path)
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -932,7 +932,7 @@ def test_do_statement_for_subroutine_with_multiple_degenerate_expressions(tmp_pa
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -1004,7 +1004,7 @@ def test_expression_with_multiple_terms(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -1057,7 +1057,7 @@ def test_term_with_parantheses(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -1116,7 +1116,7 @@ def test_unary_op_term(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -1179,7 +1179,7 @@ def test_access_array_term(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -1235,7 +1235,7 @@ def test_subroutine_call_term(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,output_file)
+            CompilationEngine(input_file,XMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier> SomeClass </identifier>
@@ -1276,6 +1276,22 @@ def test_subroutine_call_term(tmp_path):
       <symbol> } </symbol>
     </subroutineBody>
   </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
+
+
+def test_class_(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {}""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,XMLWriter(output_file))
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier> SomeClass </identifier>
+  <symbol> { </symbol>
   <symbol> } </symbol>
 </class>
 """
