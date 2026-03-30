@@ -70,7 +70,11 @@ class CompilationEngine:
         self.tokenizer.advance()
         self.symbol_table.define(name,current_type,kind)
         while self.tokenizer.get_current_token()!=';':
-            self._compile_atom_and_advance_repeatedly(2)
+            self._compile_atom_and_advance_repeatedly(1)
+            name=self.tokenizer.get_current_token()
+            self.writer.write_identifier(name,kind,True,self.symbol_table.var_count(kind))
+            self.tokenizer.advance()
+            self.symbol_table.define(name,current_type,kind)
         self._compile_atom_and_advance_repeatedly(1)
 
 
