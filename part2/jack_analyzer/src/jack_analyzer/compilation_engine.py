@@ -123,13 +123,25 @@ class CompilationEngine:
             if self.tokenizer.token_type() in [TokenType.string_const,TokenType.keyword,TokenType.int_const]:
                 self._compile_atom_and_advance_repeatedly(1)
             else:
-                self._compile_atom_and_advance_repeatedly(1)
-            if self.tokenizer.get_current_token()=='[':
-                self._compile_atom_and_advance_repeatedly(1)
-                self._compile_expression()
-                self._compile_atom_and_advance_repeatedly(1)
-            elif self.tokenizer.get_current_token() in ['(','.']:
-                self._compile_subroutine_call_from_end_of_identifier()
+                name=self.tokenizer.get_current_token()
+                kind=self.symbol_table.kind_of(name)
+                self.tokenizer.advance()
+                # self._compile_atom_and_advance_repeatedly(1)
+                if self.tokenizer.get_current_token()=='[':
+                    occurence=self.symbol_table.index_of(name)
+                    self.writer.write_identifier(name,kind,False,occurence)
+                    self._compile_atom_and_advance_repeatedly(1)
+                    self._compile_expression()
+                    self._compile_atom_and_advance_repeatedly(1)
+                elif self.tokenizer.get_current_token() in ['(','.']:
+                    if self.tokenizer.get_current_token()=='(':
+                        self.writer.write_identifier(name,IdentifierKind.subroutine,False)
+                    else:
+                        self.writer.write_identifier(name,IdentifierKind.class_identifier,False)
+                    self._compile_subroutine_call_from_end_of_identifier()
+                else:
+                    occurence=self.symbol_table.index_of(name)
+                    self.writer.write_identifier(name,kind,False,occurence)
 
     @_compilation_unit("expression")
     def _compile_expression(self):
@@ -141,7 +153,10 @@ class CompilationEngine:
 
     @_compilation_unit("letStatement")
     def _compile_let_statement(self):
-        self._compile_atom_and_advance_repeatedly(2)
+        self._compile_atom_and_advance_repeatedly(1)
+        name=self.tokenizer.get_current_token()
+        self.writer.write_identifier(name,self.symbol_table.kind_of(name),False,self.symbol_table.index_of(name))
+        self.tokenizer.advance()
         if self.tokenizer.get_current_token()=="[":
             self._compile_atom_and_advance_repeatedly(1)
             self._compile_expression()
@@ -186,7 +201,11 @@ class CompilationEngine:
             
     def _compile_subroutine_call_from_end_of_identifier(self):
         if self.tokenizer.get_current_token()=='.':
-            self._compile_atom_and_advance_repeatedly(3)
+            self._compile_atom_and_advance_repeatedly(1)
+            name=self.tokenizer.get_current_token()
+            self.writer.write_identifier(name,IdentifierKind.subroutine,False)
+            self.tokenizer.advance()
+            self._compile_atom_and_advance_repeatedly(1)
         elif self.tokenizer.get_current_token()=='(':
             self._compile_atom_and_advance_repeatedly(1)
         else:

@@ -327,6 +327,7 @@ def test_return_with_degenerate_expression(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int x;
         return x;}
                           }""")
     with open(input_path) as input_file:
@@ -346,6 +347,12 @@ def test_return_with_degenerate_expression(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> x </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <returnStatement>
           <keyword> return </keyword>
@@ -417,6 +424,7 @@ def test_let_statement_degenerate_expression(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int game;
         let game = game;
         return;}
                           }""")
@@ -437,6 +445,12 @@ def test_let_statement_degenerate_expression(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> game </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
@@ -466,6 +480,8 @@ def test_let_statement_when_assigning_to_array_degenerate_expression(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var Array a;
+        var int somevar;
         let a[1] = somevar;
         return;}
                           }""")
@@ -486,6 +502,18 @@ def test_let_statement_when_assigning_to_array_degenerate_expression(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier> Array </identifier>
+        <identifier> a </identifier>
+        <symbol> ; </symbol>
+      </varDec>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> somevar </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
@@ -523,6 +551,7 @@ def test_multiple_let_statement_degenerate_expression(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int game, x;
         let game = game;
         let x = x;
         return;}
@@ -544,6 +573,14 @@ def test_multiple_let_statement_degenerate_expression(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> game </identifier>
+        <symbol> , </symbol>
+        <identifier> x </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
@@ -584,6 +621,7 @@ def test_if_statement_degenerate_expression_no_else(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int x, size;
         if (x) {
         let size = size;
       }
@@ -606,6 +644,14 @@ def test_if_statement_degenerate_expression_no_else(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> x </identifier>
+        <symbol> , </symbol>
+        <identifier> size </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <ifStatement>
           <keyword> if </keyword>
@@ -649,9 +695,10 @@ def test_if_statement_degenerate_expression(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var boolean b;
         if (b) {
         }
-        else { 
+        else {
         }
         return;}
                           }""")
@@ -672,6 +719,12 @@ def test_if_statement_degenerate_expression(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> boolean </keyword>
+        <identifier> b </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <ifStatement>
           <keyword> if </keyword>
@@ -710,6 +763,7 @@ def test_while_statement_degenerate_expression(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var char key;
         while (key) {
             let key = key;
          }
@@ -732,6 +786,12 @@ def test_while_statement_degenerate_expression(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> char </keyword>
+        <identifier> key </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <whileStatement>
           <keyword> while </keyword>
@@ -872,6 +932,7 @@ def test_do_statement_for_subroutine_with_single_degenerate_expression(tmp_path)
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int x;
         do Screen.setColor(x);
         return;}
                           }""")
@@ -892,6 +953,12 @@ def test_do_statement_for_subroutine_with_single_degenerate_expression(tmp_path)
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> x </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <doStatement>
           <keyword> do </keyword>
@@ -927,6 +994,7 @@ def test_do_statement_for_subroutine_with_multiple_degenerate_expressions(tmp_pa
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int x, y;
         do Screen.drawRectangle(x, y, x, y);
         return;}
                           }""")
@@ -947,6 +1015,14 @@ def test_do_statement_for_subroutine_with_multiple_degenerate_expressions(tmp_pa
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> x </identifier>
+        <symbol> , </symbol>
+        <identifier> y </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <doStatement>
           <keyword> do </keyword>
@@ -999,6 +1075,7 @@ def test_expression_with_multiple_terms(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int size;
         let size = size + 2;
         return;}
                           }""")
@@ -1019,6 +1096,12 @@ def test_expression_with_multiple_terms(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> size </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
@@ -1052,6 +1135,7 @@ def test_term_with_parantheses(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int i, j;
         let i = i * (j);
         return;}
                           }""")
@@ -1072,6 +1156,14 @@ def test_term_with_parantheses(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> i </identifier>
+        <symbol> , </symbol>
+        <identifier> j </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
@@ -1111,6 +1203,7 @@ def test_unary_op_term(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int i, j;
         let i = i * (-j);
         return;}
                           }""")
@@ -1131,6 +1224,14 @@ def test_unary_op_term(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> i </identifier>
+        <symbol> , </symbol>
+        <identifier> j </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
@@ -1174,6 +1275,8 @@ def test_access_array_term(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var int somevar;
+        var Array a;
         let somevar = a[2];
         return;}
                           }""")
@@ -1194,6 +1297,18 @@ def test_access_array_term(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <keyword> int </keyword>
+        <identifier> somevar </identifier>
+        <symbol> ; </symbol>
+      </varDec>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier> Array </identifier>
+        <identifier> a </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
@@ -1230,6 +1345,7 @@ def test_subroutine_call_term(tmp_path):
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
     method void draw() {
+        var SquareGame game;
         let game = SquareGame.new();
         return;}
                           }""")
@@ -1250,6 +1366,12 @@ def test_subroutine_call_term(tmp_path):
     <symbol> ) </symbol>
     <subroutineBody>
       <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier> SquareGame </identifier>
+        <identifier> game </identifier>
+        <symbol> ; </symbol>
+      </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
