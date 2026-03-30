@@ -941,52 +941,52 @@ def test_subroutine_declaration_that_returns_custom_type(tmp_path):
 # </class>
 # """
 
-# def test_do_statement_for_functions_degenerate_expression(tmp_path):
-#     input_path = tmp_path /"input_file"
-#     output_path = tmp_path /"output_file"
-#     input_path.write_text("""class SomeClass {
-#     method void draw() {
-#         do erase();
-#         return;}
-#                           }""")
-#     with open(input_path) as input_file:
-#         with open(output_path,"w") as output_file:
-#             CompilationEngine(input_file,XMLWriter(output_file))
-#     assert output_path.read_text()== """<class>
-#   <keyword> class </keyword>
-#   <identifier> SomeClass </identifier>
-#   <symbol> { </symbol>
-#   <subroutineDec>
-#     <keyword> method </keyword>
-#     <keyword> void </keyword>
-#     <identifier> draw </identifier>
-#     <symbol> ( </symbol>
-#     <parameterList>
-#     </parameterList>
-#     <symbol> ) </symbol>
-#     <subroutineBody>
-#       <symbol> { </symbol>
-#       <statements>
-#         <doStatement>
-#           <keyword> do </keyword>
-#           <identifier> erase </identifier>
-#           <symbol> ( </symbol>
-#           <expressionList>
-#           </expressionList>
-#           <symbol> ) </symbol>
-#           <symbol> ; </symbol>
-#         </doStatement>
-#         <returnStatement>
-#           <keyword> return </keyword>
-#           <symbol> ; </symbol>
-#         </returnStatement>
-#       </statements>
-#       <symbol> } </symbol>
-#     </subroutineBody>
-#   </subroutineDec>
-#   <symbol> } </symbol>
-# </class>
-# """
+def test_do_statement_for_functions_degenerate_expression(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method void draw() {
+        do erase();
+        return;}
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier class-definition> SomeClass </identifier class-definition>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier subroutine-definition> draw </identifier subroutine-definition>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <statements>
+        <doStatement>
+          <keyword> do </keyword>
+          <identifier subroutine-use> erase </identifier subroutine-use>
+          <symbol> ( </symbol>
+          <expressionList>
+          </expressionList>
+          <symbol> ) </symbol>
+          <symbol> ; </symbol>
+        </doStatement>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
 
 # def test_do_statement_for_methods_degenerate_expression(tmp_path):
 #     input_path = tmp_path /"input_file"

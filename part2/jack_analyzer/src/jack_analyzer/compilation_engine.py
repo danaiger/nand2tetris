@@ -216,7 +216,10 @@ class CompilationEngine:
 
     @_compilation_unit("doStatement")
     def _compile_do_statement(self):
-        self._compile_atom_and_advance_repeatedly(2)
+        self._compile_atom_and_advance_repeatedly(1)
+        name=self.tokenizer.get_current_token()
+        self.writer.write_identifier(name,IdentifierKind.subroutine,False)
+        self.tokenizer.advance()
         self._compile_subroutine_call_from_end_of_identifier()
         self._compile_atom_and_advance_repeatedly(1)
         
