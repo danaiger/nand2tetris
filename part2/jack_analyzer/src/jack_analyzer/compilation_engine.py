@@ -36,7 +36,7 @@ class XMLWriter:
 class ExtendedXMLWriter(XMLWriter):
     def write_identifier(self, name: str,kind:IdentifierKind , is_defined:bool,occurence:int=0):
         extended_info=f"{kind.value}-{'definition' if is_defined else 'use'}"
-        if kind not in [IdentifierKind.class_identifier]:
+        if kind not in [IdentifierKind.class_identifier,IdentifierKind.subroutine]:
             extended_info+=f"-{occurence}"
         self.output_file.write(f"{' '*self.indentation_spaces}<{TokenType.identifier.value} {extended_info}> {name} </{TokenType.identifier.value} {extended_info}>\n")
 
@@ -212,7 +212,10 @@ class CompilationEngine:
 
     @_compilation_unit("subroutineDec")
     def compile_subroutine_dec(self):
-        self._compile_atom_and_advance_repeatedly(4)
+        self._compile_atom_and_advance_repeatedly(2)
+        self.writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.subroutine,True)
+        self.tokenizer.advance()
+        self._compile_atom_and_advance_repeatedly(1)
         self._compile_parameter_list()
         self._compile_atom_and_advance_repeatedly(1)
         self._compile_subroutine_body()

@@ -9,6 +9,7 @@ class TokenType(str, Enum):
 
 class IdentifierKind(str, Enum):
     class_identifier= "class"
+    subroutine= "subroutine"
     field= "field"
     static= "static"
     var= "var"
