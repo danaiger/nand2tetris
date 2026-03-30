@@ -397,6 +397,50 @@ def test_multiple_subroutines_with_var_declaration(tmp_path):
 </class>
 """
 
+def test_subroutine_with_var_declaration_which_its_type_is_other_class(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method void draw() {
+        var SquareGame game;
+        return;
+                    }
+    }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier class-definition> SomeClass </identifier class-definition>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier subroutine-definition> draw </identifier subroutine-definition>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier class-use> SquareGame </identifier class-use>
+        <identifier var-definition-0> game </identifier var-definition-0>
+        <symbol> ; </symbol>
+      </varDec>
+      <statements>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
 
 # def test_return_with_degenerate_expression(tmp_path):
 #     input_path = tmp_path /"input_file"
@@ -1301,17 +1345,25 @@ def test_multiple_subroutines_with_var_declaration(tmp_path):
 # </class>
 # """
 
+
+
+
+
+
+
+
 # def test_subroutine_call_term(tmp_path):
 #     input_path = tmp_path /"input_file"
 #     output_path = tmp_path /"output_file"
 #     input_path.write_text("""class SomeClass {
 #     method void draw() {
+#         var SquareGame game;
 #         let game = SquareGame.new();
 #         return;}
 #                           }""")
 #     with open(input_path) as input_file:
 #         with open(output_path,"w") as output_file:
-#             CompilationEngine(input_file,XMLWriter(output_file))
+#             CompilationEngine(input_file,ExtendedXMLWriter(output_file))
 #     assert output_path.read_text()== """<class>
 #   <keyword> class </keyword>
 #   <identifier> SomeClass </identifier>
@@ -1326,16 +1378,22 @@ def test_multiple_subroutines_with_var_declaration(tmp_path):
 #     <symbol> ) </symbol>
 #     <subroutineBody>
 #       <symbol> { </symbol>
+#       <varDec>
+#         <keyword> var </keyword>
+#         <identifier class-use> SquareGame </identifier class-use>
+#         <identifier var-definition-0> game </identifier var-definition-0>
+#         <symbol> ; </symbol>
+#       </varDec>
 #       <statements>
 #         <letStatement>
 #           <keyword> let </keyword>
-#           <identifier> game </identifier>
+#           <identifier var-use-0> game </identifier var-use-0>
 #           <symbol> = </symbol>
 #           <expression>
 #             <term>
-#               <identifier> SquareGame </identifier>
+#               <identifier class-use> SquareGame </identifier class-use>
 #               <symbol> . </symbol>
-#               <identifier> new </identifier>
+#               <identifier subroutine-use> new </identifier subroutine-use>
 #               <symbol> ( </symbol>
 #               <expressionList>
 #               </expressionList>

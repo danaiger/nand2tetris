@@ -22,7 +22,7 @@ class XMLWriter:
         output=format_output(current_token,current_token_type)
         self.output_file.write(f"{' '*self.indentation_spaces}<{current_token_type.value}> {output} </{current_token_type.value}>\n")
 
-    def write_identifier(self,name: str,kind:IdentifierKind , is_defined:bool,occurence:int=0):
+    def write_identifier(self,name: str,kind:IdentifierKind , is_definition:bool,occurence:int=0):
         self.write_token(name,TokenType.identifier)
     
     def open_compilation_unit(self,name:str):
@@ -34,8 +34,8 @@ class XMLWriter:
         self.output_file.write(f"{' '*self.indentation_spaces}</{name}>\n")
     
 class ExtendedXMLWriter(XMLWriter):
-    def write_identifier(self, name: str,kind:IdentifierKind , is_defined:bool,occurence:int=0):
-        extended_info=f"{kind.value}-{'definition' if is_defined else 'use'}"
+    def write_identifier(self, name: str,kind:IdentifierKind , is_definition:bool,occurence:int=0):
+        extended_info=f"{kind.value}-{'definition' if is_definition else 'use'}"
         if kind not in [IdentifierKind.class_identifier,IdentifierKind.subroutine]:
             extended_info+=f"-{occurence}"
         self.output_file.write(f"{' '*self.indentation_spaces}<{TokenType.identifier.value} {extended_info}> {name} </{TokenType.identifier.value} {extended_info}>\n")
@@ -64,7 +64,11 @@ class CompilationEngine:
             kind=IdentifierKind.var
         self._compile_atom_and_advance_repeatedly(1)
         current_type=self.tokenizer.get_current_token()
-        self._compile_atom_and_advance_repeatedly(1)
+        if current_type in ['char','int','boolean']:
+            self._compile_atom_and_advance_repeatedly(1)
+        else:
+            self.writer.write_identifier(current_type,kind.class_identifier,False)
+            self.tokenizer.advance()
         name=self.tokenizer.get_current_token()
         self.symbol_table.define(name,current_type,kind)
         self.writer.write_identifier(name,kind,True,self.symbol_table.index_of(name))
@@ -116,7 +120,10 @@ class CompilationEngine:
             self._compile_atom_and_advance_repeatedly(1)
             self._compile_term()
         else:
-            self._compile_atom_and_advance_repeatedly(1)
+            if self.tokenizer.token_type() in [TokenType.string_const,TokenType.keyword,TokenType.int_const]:
+                self._compile_atom_and_advance_repeatedly(1)
+            else:
+                self._compile_atom_and_advance_repeatedly(1)
             if self.tokenizer.get_current_token()=='[':
                 self._compile_atom_and_advance_repeatedly(1)
                 self._compile_expression()
