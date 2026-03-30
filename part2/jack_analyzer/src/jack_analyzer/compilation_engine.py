@@ -91,9 +91,20 @@ class CompilationEngine:
     def _compile_parameter_list(self):
         if self.tokenizer.get_current_token()==')':
             return
-        self._compile_atom_and_advance_repeatedly(2)
+        current_type=self.tokenizer.get_current_token()
+        self._compile_atom_and_advance_repeatedly(1)
+        name=self.tokenizer.get_current_token()
+        self.writer.write_identifier(name,IdentifierKind.arg,True,self.symbol_table.var_count(IdentifierKind.arg))
+        self.tokenizer.advance()
+        self.symbol_table.define(name,current_type,IdentifierKind.arg)
         while self.tokenizer.get_current_token()==',':
-            self._compile_atom_and_advance_repeatedly(3)
+            self._compile_atom_and_advance_repeatedly(1)
+            current_type=self.tokenizer.get_current_token()
+            self._compile_atom_and_advance_repeatedly(1)
+            name=self.tokenizer.get_current_token()
+            self.writer.write_identifier(name,IdentifierKind.arg,True,self.symbol_table.var_count(IdentifierKind.arg))
+            self.tokenizer.advance()
+            self.symbol_table.define(name,current_type,IdentifierKind.arg)
 
     @_compilation_unit("term")
     def _compile_term(self):
