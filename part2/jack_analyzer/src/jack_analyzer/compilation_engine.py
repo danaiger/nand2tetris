@@ -55,24 +55,6 @@ class CompilationEngine:
         self.writer.write_token(current_token,current_token_type)
     
     def _compile_var_dec(self):
-        # current_token=self.tokenizer.get_current_token()
-        # if current_token=="static":
-        #     kind=IdentifierKind.static
-        # elif current_token=="field":
-        #     kind=IdentifierKind.field
-        # else:
-        #     kind=IdentifierKind.var
-        # self.writer.write_identifier(current_token,kind,True,self.symbol_table.var_count(kind))
-        # self.tokenizer.advance()
-        # current_type=self.tokenizer.get_current_token()
-        # self._compile_atom_and_advance_repeatedly(1)
-        # name=self.tokenizer.get_current_token()
-        # self._compile_atom_and_advance_repeatedly(1)
-        # self.symbol_table.define(name,current_type,kind)
-        # while self.tokenizer.get_current_token()!=';':
-        #     self._compile_atom_and_advance_repeatedly(2)
-        # self._compile_atom_and_advance_repeatedly(1) 
-
         current_token=self.tokenizer.get_current_token()
         if current_token=="static":
             kind=IdentifierKind.static
@@ -84,7 +66,6 @@ class CompilationEngine:
         current_type=self.tokenizer.get_current_token()
         self._compile_atom_and_advance_repeatedly(1)
         name=self.tokenizer.get_current_token()
-        # self._compile_atom_and_advance_repeatedly(1)
         self.writer.write_identifier(name,kind,True,self.symbol_table.var_count(kind))
         self.tokenizer.advance()
         self.symbol_table.define(name,current_type,kind)
