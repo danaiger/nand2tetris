@@ -7,6 +7,14 @@ class TokenType(str, Enum):
     int_const = "integerConstant"
     identifier = "identifier"
 
+class IdentifierKind(str, Enum):
+    class_identifier= "class"
+    field= "field"
+    static= "static"
+    var= "var"
+    arg= "arg"
+
+
 JACK_KEYWORDS={'class','constructor','function',
          'method','field','static','var',
          'int','char','boolean','void','true',

@@ -1,7 +1,8 @@
 from typing import TextIO
 from jack_analyzer.utils import format_output
 from jack_analyzer.tokenizer import JackTokenizer
-from jack_analyzer.consts import JACK_OPERATIONS,UNARY_OPERATIONS,TokenType
+from jack_analyzer.consts import JACK_OPERATIONS,UNARY_OPERATIONS,TokenType,IdentifierKind
+from jack_analyzer.symbol_table import SymbolTable
 
 def _compilation_unit(name:str):
     def decorator(func):
@@ -21,6 +22,8 @@ class XMLWriter:
         output=format_output(current_token,current_token_type)
         self.output_file.write(f"{' '*self.indentation_spaces}<{current_token_type.value}> {output} </{current_token_type.value}>\n")
 
+    def write_identifier(self,name: str,kind:IdentifierKind , is_defined:bool,occurence:int=0):
+        self.write_token(name,TokenType.identifier)
     
     def open_compilation_unit(self,name:str):
         self.output_file.write(f"{' '*self.indentation_spaces}<{name}>\n")
@@ -29,6 +32,13 @@ class XMLWriter:
     def close_compilation_unit(self,name:str):
         self.indentation_spaces-=2
         self.output_file.write(f"{' '*self.indentation_spaces}</{name}>\n")
+    
+class ExtendedXMLWriter(XMLWriter):
+    def write_identifier(self, name: str,kind:IdentifierKind , is_defined:bool,occurence:int=0):
+        extended_info=f"{kind.value}-{'definition' if is_defined else 'use'}"
+        if kind not in [IdentifierKind.class_identifier]:
+            extended_info+=f"-{occurence}"
+        self.output_file.write(f"{' '*self.indentation_spaces}<{TokenType.identifier.value} {extended_info}> {name} </{TokenType.identifier.value} {extended_info}>\n")
 
 class CompilationEngine:
 
@@ -36,6 +46,7 @@ class CompilationEngine:
         self.input_file=input_file
         self.tokenizer=JackTokenizer(input_file)
         self.writer=writer
+        self.symbol_table=SymbolTable()
         self.compile_class()
 
     def compile_atom(self):
@@ -44,7 +55,39 @@ class CompilationEngine:
         self.writer.write_token(current_token,current_token_type)
     
     def _compile_var_dec(self):
-        self._compile_atom_and_advance_repeatedly(3)
+        # current_token=self.tokenizer.get_current_token()
+        # if current_token=="static":
+        #     kind=IdentifierKind.static
+        # elif current_token=="field":
+        #     kind=IdentifierKind.field
+        # else:
+        #     kind=IdentifierKind.var
+        # self.writer.write_identifier(current_token,kind,True,self.symbol_table.var_count(kind))
+        # self.tokenizer.advance()
+        # current_type=self.tokenizer.get_current_token()
+        # self._compile_atom_and_advance_repeatedly(1)
+        # name=self.tokenizer.get_current_token()
+        # self._compile_atom_and_advance_repeatedly(1)
+        # self.symbol_table.define(name,current_type,kind)
+        # while self.tokenizer.get_current_token()!=';':
+        #     self._compile_atom_and_advance_repeatedly(2)
+        # self._compile_atom_and_advance_repeatedly(1) 
+
+        current_token=self.tokenizer.get_current_token()
+        if current_token=="static":
+            kind=IdentifierKind.static
+        elif current_token=="field":
+            kind=IdentifierKind.field
+        else:
+            kind=IdentifierKind.var
+        self._compile_atom_and_advance_repeatedly(1)
+        current_type=self.tokenizer.get_current_token()
+        self._compile_atom_and_advance_repeatedly(1)
+        name=self.tokenizer.get_current_token()
+        # self._compile_atom_and_advance_repeatedly(1)
+        self.writer.write_identifier(name,kind,True,self.symbol_table.var_count(kind))
+        self.tokenizer.advance()
+        self.symbol_table.define(name,current_type,kind)
         while self.tokenizer.get_current_token()!=';':
             self._compile_atom_and_advance_repeatedly(2)
         self._compile_atom_and_advance_repeatedly(1)
@@ -192,7 +235,10 @@ class CompilationEngine:
     @_compilation_unit("class")
     def compile_class(self):
         self.tokenizer.advance()
-        self._compile_atom_and_advance_repeatedly(3)
+        self._compile_atom_and_advance_repeatedly(1)
+        self.writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.class_identifier,True)
+        self.tokenizer.advance()
+        self._compile_atom_and_advance_repeatedly(1)
         while self.tokenizer.get_current_token() in ["field","static"]:
             self._compile_class_var_dec()
         while self.tokenizer.get_current_token() in ["constructor","function","method"]:
