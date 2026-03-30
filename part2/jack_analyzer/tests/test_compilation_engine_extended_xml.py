@@ -442,6 +442,57 @@ def test_subroutine_with_var_declaration_which_its_type_is_other_class(tmp_path)
 </class>
 """
 
+def test_subroutine_declaration_that_returns_custom_type(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method SquareGame draw() {
+        var SquareGame game;                  
+        return game;
+      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier class-definition> SomeClass </identifier class-definition>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <identifier class-use> SquareGame </identifier class-use>
+    <identifier subroutine-definition> draw </identifier subroutine-definition>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier class-use> SquareGame </identifier class-use>
+        <identifier var-definition-0> game </identifier var-definition-0>
+        <symbol> ; </symbol>
+      </varDec>
+      <statements>
+        <returnStatement>
+          <keyword> return </keyword>
+          <expression>
+            <term>
+              <identifier var-use-0> game </identifier var-use-0>
+            </term>
+          </expression>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
+
+
 # def test_return_with_degenerate_expression(tmp_path):
 #     input_path = tmp_path /"input_file"
 #     output_path = tmp_path /"output_file"

@@ -250,7 +250,13 @@ class CompilationEngine:
     @_compilation_unit("subroutineDec")
     def compile_subroutine_dec(self):
         self.symbol_table.start_subroutine()
-        self._compile_atom_and_advance_repeatedly(2)
+        self._compile_atom_and_advance_repeatedly(1)
+        current_type=self.tokenizer.get_current_token()
+        if current_type in ['char','int','boolean','void']:
+            self._compile_atom_and_advance_repeatedly(1)
+        else:
+            self.writer.write_identifier(current_type,IdentifierKind.class_identifier,False)
+            self.tokenizer.advance()
         self.writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.subroutine,True)
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
