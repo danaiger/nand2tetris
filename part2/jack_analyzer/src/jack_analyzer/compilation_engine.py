@@ -126,7 +126,6 @@ class CompilationEngine:
                 name=self.tokenizer.get_current_token()
                 kind=self.symbol_table.kind_of(name)
                 self.tokenizer.advance()
-                # self._compile_atom_and_advance_repeatedly(1)
                 if self.tokenizer.get_current_token()=='[':
                     occurence=self.symbol_table.index_of(name)
                     self.writer.write_identifier(name,kind,False,occurence)
@@ -218,8 +217,15 @@ class CompilationEngine:
     def _compile_do_statement(self):
         self._compile_atom_and_advance_repeatedly(1)
         name=self.tokenizer.get_current_token()
-        self.writer.write_identifier(name,IdentifierKind.subroutine,False)
         self.tokenizer.advance()
+        if self.tokenizer.get_current_token()=='.':
+            kind=self.symbol_table.kind_of(name)
+            if kind:
+                self.writer.write_identifier(name,kind,False,self.symbol_table.index_of(name))
+            else:
+                self.writer.write_identifier(name,IdentifierKind.class_identifier,False)
+        else:
+            self.writer.write_identifier(name,IdentifierKind.subroutine,False)
         self._compile_subroutine_call_from_end_of_identifier()
         self._compile_atom_and_advance_repeatedly(1)
         

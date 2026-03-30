@@ -941,7 +941,7 @@ def test_subroutine_declaration_that_returns_custom_type(tmp_path):
 # </class>
 # """
 
-def test_do_statement_for_functions_degenerate_expression(tmp_path):
+def test_do_statement(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -970,6 +970,112 @@ def test_do_statement_for_functions_degenerate_expression(tmp_path):
         <doStatement>
           <keyword> do </keyword>
           <identifier subroutine-use> erase </identifier subroutine-use>
+          <symbol> ( </symbol>
+          <expressionList>
+          </expressionList>
+          <symbol> ) </symbol>
+          <symbol> ; </symbol>
+        </doStatement>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
+
+def test_do_statement_using_method_on_var(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method void draw() {
+        var Square square;
+        do square.dec_size();
+        return;}
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier class-definition> SomeClass </identifier class-definition>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier subroutine-definition> draw </identifier subroutine-definition>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <varDec>
+        <keyword> var </keyword>
+        <identifier class-use> Square </identifier class-use>
+        <identifier var-definition-0> square </identifier var-definition-0>
+        <symbol> ; </symbol>
+      </varDec>
+      <statements>
+        <doStatement>
+          <keyword> do </keyword>
+          <identifier var-use-0> square </identifier var-use-0>
+          <symbol> . </symbol>
+          <identifier subroutine-use> dec_size </identifier subroutine-use>
+          <symbol> ( </symbol>
+          <expressionList>
+          </expressionList>
+          <symbol> ) </symbol>
+          <symbol> ; </symbol>
+        </doStatement>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
+
+
+def test_do_statement_using_class_function(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method void draw() {
+        do Something.doSomething();
+        return;}
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier class-definition> SomeClass </identifier class-definition>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier subroutine-definition> draw </identifier subroutine-definition>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <statements>
+        <doStatement>
+          <keyword> do </keyword>
+          <identifier class-use> Something </identifier class-use>
+          <symbol> . </symbol>
+          <identifier subroutine-use> doSomething </identifier subroutine-use>
           <symbol> ( </symbol>
           <expressionList>
           </expressionList>
