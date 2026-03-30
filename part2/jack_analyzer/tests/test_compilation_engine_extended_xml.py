@@ -129,61 +129,61 @@ def test_basic_subroutine_declaration(tmp_path):
 </class>
 """
 
-# def test_multiple_basic_subroutine_declarations(tmp_path):
-#     input_path = tmp_path /"input_file"
-#     output_path = tmp_path /"output_file"
-#     input_path.write_text("""class SomeClass {
-#     method void draw() {return;}
-#     method void dispose() {return;}
-#                           }""")
-#     with open(input_path) as input_file:
-#         with open(output_path,"w") as output_file:
-#             CompilationEngine(input_file,XMLWriter(output_file))
-#     assert output_path.read_text()== """<class>
-#   <keyword> class </keyword>
-#   <identifier> SomeClass </identifier>
-#   <symbol> { </symbol>
-#   <subroutineDec>
-#     <keyword> method </keyword>
-#     <keyword> void </keyword>
-#     <identifier> draw </identifier>
-#     <symbol> ( </symbol>
-#     <parameterList>
-#     </parameterList>
-#     <symbol> ) </symbol>
-#     <subroutineBody>
-#       <symbol> { </symbol>
-#       <statements>
-#         <returnStatement>
-#           <keyword> return </keyword>
-#           <symbol> ; </symbol>
-#         </returnStatement>
-#       </statements>
-#       <symbol> } </symbol>
-#     </subroutineBody>
-#   </subroutineDec>
-#   <subroutineDec>
-#     <keyword> method </keyword>
-#     <keyword> void </keyword>
-#     <identifier> dispose </identifier>
-#     <symbol> ( </symbol>
-#     <parameterList>
-#     </parameterList>
-#     <symbol> ) </symbol>
-#     <subroutineBody>
-#       <symbol> { </symbol>
-#       <statements>
-#         <returnStatement>
-#           <keyword> return </keyword>
-#           <symbol> ; </symbol>
-#         </returnStatement>
-#       </statements>
-#       <symbol> } </symbol>
-#     </subroutineBody>
-#   </subroutineDec>
-#   <symbol> } </symbol>
-# </class>
-# """
+def test_multiple_basic_subroutine_declarations(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+    method void draw() {return;}
+    method void dispose() {return;}
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+    assert output_path.read_text()== """<class>
+  <keyword> class </keyword>
+  <identifier class-definition> SomeClass </identifier class-definition>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier subroutine-definition> draw </identifier subroutine-definition>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <statements>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <subroutineDec>
+    <keyword> method </keyword>
+    <keyword> void </keyword>
+    <identifier subroutine-definition> dispose </identifier subroutine-definition>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <statements>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+"""
 
 # def test_subroutine_with_parameters_list(tmp_path):
 #     input_path = tmp_path /"input_file"
