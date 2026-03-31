@@ -13,7 +13,7 @@ def test_analyzer_writes_only_token_for_empty_file(tmp_path):
 </tokens>
 """
 
-TEST_DIR=Path("tests/test_data")
+TEST_DIR=Path("tests/test_data/Analyzer")
 @pytest.mark.parametrize("dir_name", ["ArrayTest","ExpressionLessSquare","Square"])
 def test_dirs_tokenize_as_expected(dir_name):
     current_dir=TEST_DIR/dir_name
