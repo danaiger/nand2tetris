@@ -1,4 +1,4 @@
-from jack_analyzer.compilation_engine import CompilationEngine,ExtendedXMLWriter
+from jack_analyzer.compilation_engine import CompilationEngine,ExtendedXMLWriter,NullVMWriter
 
 def test_class_without_class_var_dec_and_without_subroutine(tmp_path):
     input_path = tmp_path /"input_file"
@@ -6,7 +6,7 @@ def test_class_without_class_var_dec_and_without_subroutine(tmp_path):
     input_path.write_text("""class SomeClass {}""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -23,7 +23,7 @@ def test_basic_class_var_dec(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -47,7 +47,7 @@ def test_multiple_basic_class_var_dec(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -76,7 +76,7 @@ def test_multiple_inline_class_var_dec(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -101,7 +101,7 @@ def test_basic_subroutine_declaration(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -138,7 +138,7 @@ def test_multiple_basic_subroutine_declarations(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -193,7 +193,7 @@ def test_subroutine_with_parameters_list(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -237,7 +237,7 @@ def test_subroutine_with_var_declaration(tmp_path):
     }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -283,7 +283,7 @@ def test_subroutine_with_multiple_var_declarations(tmp_path):
     }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -338,7 +338,7 @@ def test_multiple_subroutines_with_var_declaration(tmp_path):
     }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -408,7 +408,7 @@ def test_subroutine_with_var_declaration_which_its_type_is_other_class(tmp_path)
     }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -453,7 +453,7 @@ def test_subroutine_declaration_that_returns_custom_type(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -502,7 +502,7 @@ def test_do_statement(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -550,7 +550,7 @@ def test_do_statement_using_method_on_var(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -606,7 +606,7 @@ def test_do_statement_using_class_function(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>
@@ -656,7 +656,7 @@ def test_subroutine_call_term(tmp_path):
                           }""")
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
-            CompilationEngine(input_file,ExtendedXMLWriter(output_file))
+            CompilationEngine(input_file,NullVMWriter(),ExtendedXMLWriter(output_file))
     assert output_path.read_text()== """<class>
   <keyword> class </keyword>
   <identifier class-definition> SomeClass </identifier class-definition>

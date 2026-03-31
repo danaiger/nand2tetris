@@ -4,12 +4,19 @@ from jack_analyzer.tokenizer import JackTokenizer
 from jack_analyzer.consts import JACK_OPERATIONS,UNARY_OPERATIONS,TokenType,IdentifierKind
 from jack_analyzer.symbol_table import SymbolTable
 
+class VMWriter:
+    def __init__(self, output_file: TextIO):
+        self.output_file = output_file
+
+class NullVMWriter(VMWriter):
+    def __init__(self): pass
+
 def _compilation_unit(name:str):
     def decorator(func):
         def wrapper(self:CompilationEngine):
-            self.writer.open_compilation_unit(name)
+            self.xml_writer.open_compilation_unit(name)
             func(self)
-            self.writer.close_compilation_unit(name)
+            self.xml_writer.close_compilation_unit(name)
         return wrapper
     return decorator
 
@@ -33,6 +40,13 @@ class XMLWriter:
         self.indentation_spaces-=2
         self.output_file.write(f"{' '*self.indentation_spaces}</{name}>\n")
     
+class NullXMLWriter(XMLWriter):
+    def __init__(self): pass
+    def write_token(self, *a): pass
+    def write_identifier(self, *a): pass
+    def open_compilation_unit(self, *a): pass
+    def close_compilation_unit(self, *a): pass
+
 class ExtendedXMLWriter(XMLWriter):
     def write_identifier(self, name: str,kind:IdentifierKind , is_definition:bool,occurence:int=0):
         extended_info=f"{kind.value}-{'definition' if is_definition else 'use'}"
@@ -42,17 +56,18 @@ class ExtendedXMLWriter(XMLWriter):
 
 class CompilationEngine:
 
-    def __init__(self,input_file:TextIO,writer:XMLWriter):
+    def __init__(self,input_file:TextIO,vm_writer:VMWriter,writer:XMLWriter=None):
         self.input_file=input_file
         self.tokenizer=JackTokenizer(input_file)
-        self.writer=writer
+        self.vm_writer=vm_writer
+        self.xml_writer=writer or NullXMLWriter()
         self.symbol_table=SymbolTable()
         self.compile_class()
 
     def compile_atom(self):
         current_token_type=self.tokenizer.token_type()
         current_token=self.tokenizer.get_current_token()
-        self.writer.write_token(current_token,current_token_type)
+        self.xml_writer.write_token(current_token,current_token_type)
     
     def _compile_var_dec(self):
         current_token=self.tokenizer.get_current_token()
@@ -67,17 +82,17 @@ class CompilationEngine:
         if current_type in ['char','int','boolean']:
             self._compile_atom_and_advance_repeatedly(1)
         else:
-            self.writer.write_identifier(current_type,kind.class_identifier,False)
+            self.xml_writer.write_identifier(current_type,kind.class_identifier,False)
             self.tokenizer.advance()
         name=self.tokenizer.get_current_token()
         self.symbol_table.define(name,current_type,kind)
-        self.writer.write_identifier(name,kind,True,self.symbol_table.index_of(name))
+        self.xml_writer.write_identifier(name,kind,True,self.symbol_table.index_of(name))
         self.tokenizer.advance()
         while self.tokenizer.get_current_token()!=';':
             self._compile_atom_and_advance_repeatedly(1)
             name=self.tokenizer.get_current_token()
             self.symbol_table.define(name,current_type,kind)
-            self.writer.write_identifier(name,kind,True,self.symbol_table.index_of(name))
+            self.xml_writer.write_identifier(name,kind,True,self.symbol_table.index_of(name))
             self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
 
@@ -100,7 +115,7 @@ class CompilationEngine:
         name=self.tokenizer.get_current_token()
         self.tokenizer.advance()
         self.symbol_table.define(name,current_type,IdentifierKind.arg)
-        self.writer.write_identifier(name,IdentifierKind.arg,True,self.symbol_table.index_of(name))
+        self.xml_writer.write_identifier(name,IdentifierKind.arg,True,self.symbol_table.index_of(name))
         while self.tokenizer.get_current_token()==',':
             self._compile_atom_and_advance_repeatedly(1)
             current_type=self.tokenizer.get_current_token()
@@ -108,7 +123,7 @@ class CompilationEngine:
             name=self.tokenizer.get_current_token()
             self.tokenizer.advance()
             self.symbol_table.define(name,current_type,IdentifierKind.arg)
-            self.writer.write_identifier(name,IdentifierKind.arg,True,self.symbol_table.index_of(name))
+            self.xml_writer.write_identifier(name,IdentifierKind.arg,True,self.symbol_table.index_of(name))
 
     @_compilation_unit("term")
     def _compile_term(self):
@@ -128,19 +143,19 @@ class CompilationEngine:
                 self.tokenizer.advance()
                 if self.tokenizer.get_current_token()=='[':
                     occurence=self.symbol_table.index_of(name)
-                    self.writer.write_identifier(name,kind,False,occurence)
+                    self.xml_writer.write_identifier(name,kind,False,occurence)
                     self._compile_atom_and_advance_repeatedly(1)
                     self._compile_expression()
                     self._compile_atom_and_advance_repeatedly(1)
                 elif self.tokenizer.get_current_token() in ['(','.']:
                     if self.tokenizer.get_current_token()=='(':
-                        self.writer.write_identifier(name,IdentifierKind.subroutine,False)
+                        self.xml_writer.write_identifier(name,IdentifierKind.subroutine,False)
                     else:
-                        self.writer.write_identifier(name,IdentifierKind.class_identifier,False)
+                        self.xml_writer.write_identifier(name,IdentifierKind.class_identifier,False)
                     self._compile_subroutine_call_from_end_of_identifier()
                 else:
                     occurence=self.symbol_table.index_of(name)
-                    self.writer.write_identifier(name,kind,False,occurence)
+                    self.xml_writer.write_identifier(name,kind,False,occurence)
 
     @_compilation_unit("expression")
     def _compile_expression(self):
@@ -154,7 +169,7 @@ class CompilationEngine:
     def _compile_let_statement(self):
         self._compile_atom_and_advance_repeatedly(1)
         name=self.tokenizer.get_current_token()
-        self.writer.write_identifier(name,self.symbol_table.kind_of(name),False,self.symbol_table.index_of(name))
+        self.xml_writer.write_identifier(name,self.symbol_table.kind_of(name),False,self.symbol_table.index_of(name))
         self.tokenizer.advance()
         if self.tokenizer.get_current_token()=="[":
             self._compile_atom_and_advance_repeatedly(1)
@@ -202,7 +217,7 @@ class CompilationEngine:
         if self.tokenizer.get_current_token()=='.':
             self._compile_atom_and_advance_repeatedly(1)
             name=self.tokenizer.get_current_token()
-            self.writer.write_identifier(name,IdentifierKind.subroutine,False)
+            self.xml_writer.write_identifier(name,IdentifierKind.subroutine,False)
             self.tokenizer.advance()
             self._compile_atom_and_advance_repeatedly(1)
         elif self.tokenizer.get_current_token()=='(':
@@ -221,11 +236,11 @@ class CompilationEngine:
         if self.tokenizer.get_current_token()=='.':
             kind=self.symbol_table.kind_of(name)
             if kind:
-                self.writer.write_identifier(name,kind,False,self.symbol_table.index_of(name))
+                self.xml_writer.write_identifier(name,kind,False,self.symbol_table.index_of(name))
             else:
-                self.writer.write_identifier(name,IdentifierKind.class_identifier,False)
+                self.xml_writer.write_identifier(name,IdentifierKind.class_identifier,False)
         else:
-            self.writer.write_identifier(name,IdentifierKind.subroutine,False)
+            self.xml_writer.write_identifier(name,IdentifierKind.subroutine,False)
         self._compile_subroutine_call_from_end_of_identifier()
         self._compile_atom_and_advance_repeatedly(1)
         
@@ -264,9 +279,9 @@ class CompilationEngine:
         if current_type in ['char','int','boolean','void']:
             self._compile_atom_and_advance_repeatedly(1)
         else:
-            self.writer.write_identifier(current_type,IdentifierKind.class_identifier,False)
+            self.xml_writer.write_identifier(current_type,IdentifierKind.class_identifier,False)
             self.tokenizer.advance()
-        self.writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.subroutine,True)
+        self.xml_writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.subroutine,True)
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
         self._compile_parameter_list()
@@ -277,7 +292,7 @@ class CompilationEngine:
     def compile_class(self):
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
-        self.writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.class_identifier,True)
+        self.xml_writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.class_identifier,True)
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
         while self.tokenizer.get_current_token() in ["field","static"]:
