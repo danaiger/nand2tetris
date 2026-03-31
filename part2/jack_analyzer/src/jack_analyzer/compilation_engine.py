@@ -2,7 +2,7 @@ from typing import TextIO
 from jack_analyzer.tokenizer import JackTokenizer
 from jack_analyzer.consts import JACK_OPERATIONS,UNARY_OPERATIONS,TokenType,IdentifierKind
 from jack_analyzer.symbol_table import SymbolTable
-from jack_analyzer.vm_writer import VMWriter
+from jack_analyzer.vm_writer import VMSegment, VMWriter
 from jack_analyzer.xml_writer import XMLWriter,NullXMLWriter
 
 def _compilation_unit(name:str):
@@ -144,6 +144,9 @@ class CompilationEngine:
         self._compile_atom_and_advance_repeatedly(1)
         if self.tokenizer.get_current_token()!=';':
             self._compile_expression()
+        else:
+            self.vm_writer.write_push(VMSegment.const,0)
+        self.vm_writer.write_return()
         self._compile_atom_and_advance_repeatedly(1)
     
     @_compilation_unit("ifStatement")
@@ -241,7 +244,9 @@ class CompilationEngine:
         else:
             self.xml_writer.write_identifier(current_type,IdentifierKind.class_identifier,False)
             self.tokenizer.advance()
-        self.xml_writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.subroutine,True)
+        subroutine_name=self.tokenizer.get_current_token()
+        self.xml_writer.write_identifier(subroutine_name,IdentifierKind.subroutine,True)
+        self.vm_writer.write_function(f"{self._current_class_name}.{subroutine_name}",0)
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
         self._compile_parameter_list()
@@ -252,7 +257,8 @@ class CompilationEngine:
     def compile_class(self):
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
-        self.xml_writer.write_identifier(self.tokenizer.get_current_token(),IdentifierKind.class_identifier,True)
+        self._current_class_name=self.tokenizer.get_current_token()
+        self.xml_writer.write_identifier(self._current_class_name,IdentifierKind.class_identifier,True)
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
         while self.tokenizer.get_current_token() in ["field","static"]:
