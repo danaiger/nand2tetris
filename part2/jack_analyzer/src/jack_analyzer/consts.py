@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 
 class TokenType(str, Enum):
     keyword = "keyword"
@@ -15,6 +16,8 @@ class IdentifierKind(str, Enum):
     var= "var"
     arg= "arg"
 
+
+VarKind = Literal[IdentifierKind.arg, IdentifierKind.var, IdentifierKind.field, IdentifierKind.static]
 
 JACK_KEYWORDS={'class','constructor','function',
          'method','field','static','var',

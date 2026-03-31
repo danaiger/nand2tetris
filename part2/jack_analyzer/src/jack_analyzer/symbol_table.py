@@ -1,4 +1,4 @@
-from jack_analyzer.compilation_engine import IdentifierKind
+from jack_analyzer.consts import IdentifierKind, VarKind
 
 class SymbolTable:
 
@@ -16,7 +16,7 @@ class SymbolTable:
             self.class_level_table[name]=(name,type,kind,self.var_count(kind))
 
     
-    def var_count(self,kind:IdentifierKind.arg|IdentifierKind.field|IdentifierKind.var|IdentifierKind.static)->int:
+    def var_count(self, kind: VarKind) -> int:
         counter=0
         if kind in [IdentifierKind.arg,IdentifierKind.var]: 
             for entry in self.subroutine_level_table.values():
@@ -28,13 +28,13 @@ class SymbolTable:
                     counter+=1
         return counter
 
-    def index_of(self,name:str):
+    def index_of(self,name:str)->int:
         if hasattr(self,"subroutine_level_table") and name in self.subroutine_level_table:
             return self.subroutine_level_table[name][3]
         else:
             return self.class_level_table[name][3]
         
-    def kind_of(self,name:str):
+    def kind_of(self,name:str)->VarKind | None:
         if hasattr(self,"subroutine_level_table") and name in self.subroutine_level_table:
             return self.subroutine_level_table[name][2]
         elif name in self.class_level_table:

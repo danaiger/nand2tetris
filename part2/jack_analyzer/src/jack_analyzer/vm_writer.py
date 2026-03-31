@@ -1,5 +1,5 @@
 import io
-from typing import TextIO
+from typing import TextIO, Literal
 from enum import Enum
 
 class VMSegment(Enum):
@@ -12,6 +12,11 @@ class VMSegment(Enum):
     pointer = "pointer"
     temp = "temp"
 
+PopSegment = Literal[
+    VMSegment.arg, VMSegment.local, VMSegment.static,
+    VMSegment.this, VMSegment.that, VMSegment.pointer, VMSegment.temp
+]
+
 
 class VMWriter:
     def __init__(self, output_file: TextIO):
@@ -22,6 +27,12 @@ class VMWriter:
     
     def write_push(self,segment: VMSegment, index: int):
         self.output_file.write(f"push {segment.value} {index}\n")
+
+    def write_pop(self,segment: PopSegment, index: int):
+        self.output_file.write(f"pop {segment.value} {index}\n")
+    
+    def write_call(self,name: str, n_args:int):
+        self.output_file.write(f"call {name} {n_args}\n")
     
     def write_return(self):
         self.output_file.write("return\n")

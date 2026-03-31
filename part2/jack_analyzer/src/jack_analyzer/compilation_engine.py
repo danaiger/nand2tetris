@@ -95,7 +95,11 @@ class CompilationEngine:
             self._compile_atom_and_advance_repeatedly(1)
             self._compile_term()
         else:
-            if self.tokenizer.token_type() in [TokenType.string_const,TokenType.keyword,TokenType.int_const]:
+            if self.tokenizer.token_type() in [TokenType.string_const,TokenType.keyword]:
+                self._compile_atom_and_advance_repeatedly(1)
+            elif self.tokenizer.token_type() in [TokenType.int_const]:
+                number=self.tokenizer.get_current_token()
+                self.vm_writer.write_push(VMSegment.const,number)
                 self._compile_atom_and_advance_repeatedly(1)
             else:
                 name=self.tokenizer.get_current_token()
@@ -108,11 +112,7 @@ class CompilationEngine:
                     self._compile_expression()
                     self._compile_atom_and_advance_repeatedly(1)
                 elif self.tokenizer.get_current_token() in ['(','.']:
-                    if self.tokenizer.get_current_token()=='(':
-                        self.xml_writer.write_identifier(name,IdentifierKind.subroutine,False)
-                    else:
-                        self.xml_writer.write_identifier(name,IdentifierKind.class_identifier,False)
-                    self._compile_subroutine_call_from_end_of_identifier()
+                    self._compile_subroutine_call_from_end_of_identifier(name)
                 else:
                     occurence=self.symbol_table.index_of(name)
                     self.xml_writer.write_identifier(name,kind,False,occurence)
@@ -176,18 +176,27 @@ class CompilationEngine:
             if self.tokenizer.get_current_token()==',':
                 self._compile_atom_and_advance_repeatedly(1)
             
-    def _compile_subroutine_call_from_end_of_identifier(self):
+    def _compile_subroutine_call_from_end_of_identifier(self,start_of_subroutine):
+        subroutine_to_call=start_of_subroutine
         if self.tokenizer.get_current_token()=='.':
+            kind=self.symbol_table.kind_of(start_of_subroutine)
+            if kind:
+                self.xml_writer.write_identifier(start_of_subroutine,kind,False,self.symbol_table.index_of(start_of_subroutine))
+            else:
+                self.xml_writer.write_identifier(start_of_subroutine,IdentifierKind.class_identifier,False)
             self._compile_atom_and_advance_repeatedly(1)
             name=self.tokenizer.get_current_token()
+            subroutine_to_call+=f".{name}"
             self.xml_writer.write_identifier(name,IdentifierKind.subroutine,False)
             self.tokenizer.advance()
             self._compile_atom_and_advance_repeatedly(1)
         elif self.tokenizer.get_current_token()=='(':
+            self.xml_writer.write_identifier(start_of_subroutine,IdentifierKind.subroutine,False)
             self._compile_atom_and_advance_repeatedly(1)
         else:
             raise ValueError("wrong syntax")
         self._compile_expression_list()
+        self.vm_writer.write_call(subroutine_to_call,1)
         self._compile_atom_and_advance_repeatedly(1)
 
 
@@ -196,15 +205,8 @@ class CompilationEngine:
         self._compile_atom_and_advance_repeatedly(1)
         name=self.tokenizer.get_current_token()
         self.tokenizer.advance()
-        if self.tokenizer.get_current_token()=='.':
-            kind=self.symbol_table.kind_of(name)
-            if kind:
-                self.xml_writer.write_identifier(name,kind,False,self.symbol_table.index_of(name))
-            else:
-                self.xml_writer.write_identifier(name,IdentifierKind.class_identifier,False)
-        else:
-            self.xml_writer.write_identifier(name,IdentifierKind.subroutine,False)
-        self._compile_subroutine_call_from_end_of_identifier()
+        self._compile_subroutine_call_from_end_of_identifier(name)
+        self.vm_writer.write_pop(VMSegment.temp,0)
         self._compile_atom_and_advance_repeatedly(1)
         
 
