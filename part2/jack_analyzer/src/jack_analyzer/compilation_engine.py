@@ -9,8 +9,9 @@ def _compilation_unit(name:str):
     def decorator(func):
         def wrapper(self:CompilationEngine):
             self.xml_writer.open_compilation_unit(name)
-            func(self)
+            value=func(self)
             self.xml_writer.close_compilation_unit(name)
+            return value
         return wrapper
     return decorator
 
@@ -170,11 +171,14 @@ class CompilationEngine:
         self._compile_atom_and_advance_repeatedly(1)
     
     @_compilation_unit("expressionList")
-    def _compile_expression_list(self):
+    def _compile_expression_list(self)->int:
+        number_of_expressions=0
         while self.tokenizer.get_current_token()!=')':
             self._compile_expression()
+            number_of_expressions+=1
             if self.tokenizer.get_current_token()==',':
                 self._compile_atom_and_advance_repeatedly(1)
+        return number_of_expressions
             
     def _compile_subroutine_call_from_end_of_identifier(self,start_of_subroutine):
         subroutine_to_call=start_of_subroutine
@@ -195,8 +199,8 @@ class CompilationEngine:
             self._compile_atom_and_advance_repeatedly(1)
         else:
             raise ValueError("wrong syntax")
-        self._compile_expression_list()
-        self.vm_writer.write_call(subroutine_to_call,1)
+        parameters_number=self._compile_expression_list()
+        self.vm_writer.write_call(subroutine_to_call,parameters_number)
         self._compile_atom_and_advance_repeatedly(1)
 
 
