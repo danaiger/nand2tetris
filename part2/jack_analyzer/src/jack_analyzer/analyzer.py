@@ -2,7 +2,7 @@ from pathlib import Path
 from jack_analyzer.tokenizer import JackTokenizer
 from jack_analyzer.compilation_engine import CompilationEngine
 from jack_analyzer.xml_writer import XMLWriter
-from jack_analyzer.vm_writer import VMWriter
+from jack_analyzer.vm_writer import NullVMWriter
 from jack_analyzer.utils import format_output
 
 class JackAnalyzer:
@@ -35,9 +35,8 @@ class JackAnalyzer:
     
     def _analyze_file(self,path):
         with open(path) as input_file:
-            with open(path.with_suffix(".vm"),'w') as vm_file:
-                with open(path.with_suffix(".xml"),'w') as xml_file:
-                    CompilationEngine(input_file,VMWriter(vm_file),XMLWriter(xml_file))
+            with open(path.with_suffix(".xml"),'w') as xml_file:
+                CompilationEngine(input_file,NullVMWriter(),XMLWriter(xml_file))
 
     
     def analyze(self):
