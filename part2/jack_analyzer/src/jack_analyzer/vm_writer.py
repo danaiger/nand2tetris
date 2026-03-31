@@ -17,6 +17,15 @@ PopSegment = Literal[
     VMSegment.this, VMSegment.that, VMSegment.pointer, VMSegment.temp
 ]
 
+ArithmeticOpToVMCommand={
+    "+":"add",
+    "-":"sub",
+    "&":"and",
+    "|":"or",
+    "<":"lt",
+    ">":"gt",
+    "=":"eq"
+}
 
 class VMWriter:
     def __init__(self, output_file: TextIO):
@@ -24,7 +33,10 @@ class VMWriter:
     
     def write_function(self,name:str,n_locals:int):
         self.output_file.write(f"function {name} {n_locals}\n")
-    
+
+    def write_arithmetic(self,command:str):
+        self.output_file.write(f"{ArithmeticOpToVMCommand[command]}\n")
+
     def write_push(self,segment: VMSegment, index: int):
         self.output_file.write(f"push {segment.value} {index}\n")
 

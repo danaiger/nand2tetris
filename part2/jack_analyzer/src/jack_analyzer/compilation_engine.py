@@ -2,7 +2,7 @@ from typing import TextIO
 from jack_analyzer.tokenizer import JackTokenizer
 from jack_analyzer.consts import JACK_OPERATIONS,UNARY_OPERATIONS,TokenType,IdentifierKind
 from jack_analyzer.symbol_table import SymbolTable
-from jack_analyzer.vm_writer import VMSegment, VMWriter
+from jack_analyzer.vm_writer import ArithmeticOpToVMCommand, VMSegment, VMWriter
 from jack_analyzer.xml_writer import XMLWriter,NullXMLWriter
 
 def _compilation_unit(name:str):
@@ -122,8 +122,15 @@ class CompilationEngine:
     def _compile_expression(self):
         self._compile_term()
         while self.tokenizer.get_current_token() in JACK_OPERATIONS:
+            op=self.tokenizer.get_current_token()
             self._compile_atom_and_advance_repeatedly(1)
             self._compile_term()
+            if op in ArithmeticOpToVMCommand.keys():
+                self.vm_writer.write_arithmetic(op)
+            elif op == "*":
+                self.vm_writer.write_call("Math.multiply",2)
+            elif op == "/":
+                self.vm_writer.write_call("Math.divide",2)
         
 
     @_compilation_unit("letStatement")
