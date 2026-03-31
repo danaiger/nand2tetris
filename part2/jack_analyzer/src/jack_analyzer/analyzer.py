@@ -1,6 +1,8 @@
 from pathlib import Path
 from jack_analyzer.tokenizer import JackTokenizer
-from jack_analyzer.compilation_engine import CompilationEngine,XMLWriter,VMWriter
+from jack_analyzer.compilation_engine import CompilationEngine
+from jack_analyzer.xml_writer import XMLWriter
+from jack_analyzer.vm_writer import VMWriter
 from jack_analyzer.utils import format_output
 
 class JackAnalyzer:

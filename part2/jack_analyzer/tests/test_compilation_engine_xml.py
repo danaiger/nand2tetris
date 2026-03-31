@@ -1,4 +1,6 @@
-from jack_analyzer.compilation_engine import CompilationEngine,XMLWriter,NullVMWriter
+from jack_analyzer.compilation_engine import CompilationEngine
+from jack_analyzer.xml_writer import XMLWriter
+from jack_analyzer.vm_writer import NullVMWriter
 
 def test_class_without_class_var_dec_and_without_subroutine(tmp_path):
     input_path = tmp_path /"input_file"
