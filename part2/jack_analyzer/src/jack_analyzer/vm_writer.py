@@ -24,7 +24,8 @@ ArithmeticOpToVMCommand={
     "|":"or",
     "<":"lt",
     ">":"gt",
-    "=":"eq"
+    "=":"eq",
+    "~":"not"
 }
 
 class VMWriter:
@@ -46,6 +47,15 @@ class VMWriter:
     def write_call(self,name: str, n_args:int):
         self.output_file.write(f"call {name} {n_args}\n")
     
+    def write_if(self,label:str):            
+        self.output_file.write(f"if-goto {label}\n")
+    
+    def write_goto(self,label:str):            
+        self.output_file.write(f"goto {label}\n")
+
+    def write_label(self,label:str):            
+        self.output_file.write(f"Label {label}\n")
+
     def write_return(self):
         self.output_file.write("return\n")
 

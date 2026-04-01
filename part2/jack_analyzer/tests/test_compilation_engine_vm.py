@@ -125,3 +125,71 @@ push constant 0
 return
 """
 
+def test_if(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class Main {
+        function void main(){
+    	    if (3 > 0) {
+    	        do Output.printInt(1);
+       	    }
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function Main.main 0
+push constant 3
+push constant 0
+gt
+not
+if-goto L1
+push constant 1
+call Output.printInt 1
+pop temp 0
+goto L2
+Label L1
+Label L2
+push constant 0
+return
+"""
+
+
+def test_if_else(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class Main {
+        function void main(){
+    	    if (3 > 0) {
+    	        do Output.printInt(1);
+       	    }
+            else {
+                do Output.printInt(2);
+            }
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function Main.main 0
+push constant 3
+push constant 0
+gt
+not
+if-goto L1
+push constant 1
+call Output.printInt 1
+pop temp 0
+goto L2
+Label L1
+push constant 2
+call Output.printInt 1
+pop temp 0
+Label L2
+push constant 0
+return
+"""
+
+

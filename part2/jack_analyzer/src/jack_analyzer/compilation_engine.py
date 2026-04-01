@@ -23,6 +23,7 @@ class CompilationEngine:
         self.vm_writer=vm_writer
         self.xml_writer=writer or NullXMLWriter()
         self.symbol_table=SymbolTable()
+        self._labels=set()
         self.compile_class()
 
     def compile_atom(self):
@@ -158,17 +159,30 @@ class CompilationEngine:
         self.vm_writer.write_return()
         self._compile_atom_and_advance_repeatedly(1)
     
+    def _generate_unique_label(self,name:str="L")->str:
+        added_label=f"{name}{len(self._labels)+1}"
+        self._labels.add(added_label)
+        return added_label
+
+
     @_compilation_unit("ifStatement")
     def _compile_if_statement(self):
+        else_label=self._generate_unique_label()
+        continue_label=self._generate_unique_label()
         self._compile_atom_and_advance_repeatedly(2)
         self._compile_expression()
+        self.vm_writer.write_arithmetic("~")
+        self.vm_writer.write_if(else_label)
         self._compile_atom_and_advance_repeatedly(2)
         self._compile_statements()
+        self.vm_writer.write_goto(continue_label)
         self._compile_atom_and_advance_repeatedly(1)
+        self.vm_writer.write_label(else_label)
         if self.tokenizer.get_current_token()=="else":
             self._compile_atom_and_advance_repeatedly(2)
             self._compile_statements()
             self._compile_atom_and_advance_repeatedly(1)
+        self.vm_writer.write_label(continue_label)
 
     @_compilation_unit("whileStatement")
     def _compile_while_statement(self):
