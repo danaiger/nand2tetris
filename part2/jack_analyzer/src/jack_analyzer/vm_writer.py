@@ -4,7 +4,7 @@ from enum import Enum
 
 class VMSegment(Enum):
     const= "constant"
-    arg = "arg"
+    arg = "argument"
     local= "local"
     static = "static"
     this = "this"
