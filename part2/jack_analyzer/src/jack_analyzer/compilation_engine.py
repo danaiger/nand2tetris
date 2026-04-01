@@ -196,11 +196,19 @@ class CompilationEngine:
 
     @_compilation_unit("whileStatement")
     def _compile_while_statement(self):
+        loop_label=self._generate_unique_label()
+        self.vm_writer.write_label(loop_label)
+        continue_label=self._generate_unique_label()
         self._compile_atom_and_advance_repeatedly(2)
         self._compile_expression()
+        self.vm_writer.write_arithmetic("~")
+        self.vm_writer.write_if(continue_label)
         self._compile_atom_and_advance_repeatedly(2)
         self._compile_statements()
         self._compile_atom_and_advance_repeatedly(1)
+        self.vm_writer.write_goto(loop_label)
+        self.vm_writer.write_label(continue_label)
+
     
     @_compilation_unit("expressionList")
     def _compile_expression_list(self)->int:
