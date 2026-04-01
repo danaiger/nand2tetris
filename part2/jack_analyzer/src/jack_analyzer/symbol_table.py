@@ -9,7 +9,7 @@ class SymbolTable:
     def start_subroutine(self):
         self.subroutine_level_table=dict()
 
-    def define(self,name:str,type:str,kind: IdentifierKind):
+    def define(self,name:str,type:str,kind: VarKind):
         if kind in [IdentifierKind.arg,IdentifierKind.var]: 
             self.subroutine_level_table[name]=(name,type,kind,self.var_count(kind))
         else:

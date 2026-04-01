@@ -145,6 +145,7 @@ class CompilationEngine:
             self._compile_atom_and_advance_repeatedly(1)
         self._compile_atom_and_advance_repeatedly(1)
         self._compile_expression()
+        self.vm_writer.write_pop(VMSegment.local,self.symbol_table.index_of(name))
         self._compile_atom_and_advance_repeatedly(1)
 
     @_compilation_unit("returnStatement")
