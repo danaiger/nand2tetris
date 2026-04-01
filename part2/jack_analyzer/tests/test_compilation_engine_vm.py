@@ -192,4 +192,70 @@ push constant 0
 return
 """
 
+def test_expression_with_var(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class Main {
+        function void main(){
+        var int count;
+
+    	let count = 0;
+        let count = count + 1; 
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function Main.main 0
+push constant 0
+pop local 0
+push local 0
+push constant 1
+add
+pop local 0
+push constant 0
+return
+"""
+
+# def test_while(tmp_path):
+#     input_path = tmp_path /"input_file"
+#     output_path = tmp_path /"output_file"
+#     input_path.write_text("""class Main {
+#         function void main(){
+#         var int count;
+
+#     	let count = 0;
+#     	while (count<2) {
+#     	    do Output.printInt(count);
+#             let count= count+1;
+#     	}
+#             return;
+#                       }
+#                           }""")
+#     with open(input_path) as input_file:
+#         with open(output_path,"w") as output_file:
+#             CompilationEngine(input_file,VMWriter(output_file))
+#     assert output_path.read_text()=="""function Main.main 0
+# push constant 0
+# pop local 0
+# Label L1
+# push local 0
+# push constant 2
+# lt
+# not
+# if-goto L2
+# push local 0
+# call Output.printInt 1
+# pop temp 0
+# goto L2
+# push local 0
+# push constant 1
+# add
+# pop local 0
+# goto L1
+# Label L2
+# push constant 0
+# return
+# """
 

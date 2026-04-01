@@ -5,6 +5,13 @@ from jack_analyzer.symbol_table import SymbolTable
 from jack_analyzer.vm_writer import ArithmeticOpToVMCommand, VMSegment, VMWriter
 from jack_analyzer.xml_writer import XMLWriter,NullXMLWriter
 
+IdentifierKindToVMSegment={
+    IdentifierKind.var:VMSegment.local,
+    IdentifierKind.field:VMSegment.this,
+    IdentifierKind.static:VMSegment.static,
+    IdentifierKind.arg:VMSegment.arg
+}
+
 def _compilation_unit(name:str):
     def decorator(func):
         def wrapper(self:CompilationEngine):
@@ -118,6 +125,7 @@ class CompilationEngine:
                 else:
                     occurence=self.symbol_table.index_of(name)
                     self.xml_writer.write_identifier(name,kind,False,occurence)
+                    self.vm_writer.write_push(IdentifierKindToVMSegment[kind], occurence)
 
     @_compilation_unit("expression")
     def _compile_expression(self):
@@ -138,7 +146,9 @@ class CompilationEngine:
     def _compile_let_statement(self):
         self._compile_atom_and_advance_repeatedly(1)
         name=self.tokenizer.get_current_token()
-        self.xml_writer.write_identifier(name,self.symbol_table.kind_of(name),False,self.symbol_table.index_of(name))
+        kind=self.symbol_table.kind_of(name)
+        occurence=self.symbol_table.index_of(name)
+        self.xml_writer.write_identifier(name,kind,False,occurence)
         self.tokenizer.advance()
         if self.tokenizer.get_current_token()=="[":
             self._compile_atom_and_advance_repeatedly(1)
@@ -146,7 +156,7 @@ class CompilationEngine:
             self._compile_atom_and_advance_repeatedly(1)
         self._compile_atom_and_advance_repeatedly(1)
         self._compile_expression()
-        self.vm_writer.write_pop(VMSegment.local,self.symbol_table.index_of(name))
+        self.vm_writer.write_pop(IdentifierKindToVMSegment[kind],occurence)
         self._compile_atom_and_advance_repeatedly(1)
 
     @_compilation_unit("returnStatement")
