@@ -101,8 +101,13 @@ class CompilationEngine:
             self._compile_expression()
             self._compile_atom_and_advance_repeatedly(1)
         elif self.tokenizer.get_current_token() in UNARY_OPERATIONS:
+            op=self.tokenizer.get_current_token()
             self._compile_atom_and_advance_repeatedly(1)
             self._compile_term()
+            if op == '-':
+                self.vm_writer.write_arithmetic('neg')
+            else:
+                self.vm_writer.write_arithmetic('~')
         else:
             if self.tokenizer.token_type() in [TokenType.string_const,TokenType.keyword]:
                 token=self.tokenizer.get_current_token()
