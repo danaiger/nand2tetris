@@ -57,7 +57,7 @@ class VMWriter:
         self.output_file.write(f"goto {label}\n")
 
     def write_label(self,label:str):            
-        self.output_file.write(f"Label {label}\n")
+        self.output_file.write(f"label {label}\n")
 
     def write_return(self):
         self.output_file.write("return\n")

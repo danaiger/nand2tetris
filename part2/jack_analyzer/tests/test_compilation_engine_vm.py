@@ -149,8 +149,8 @@ push constant 1
 call Output.printInt 1
 pop temp 0
 goto L2
-Label L1
-Label L2
+label L1
+label L2
 push constant 0
 return
 """
@@ -183,11 +183,11 @@ push constant 1
 call Output.printInt 1
 pop temp 0
 goto L2
-Label L1
+label L1
 push constant 2
 call Output.printInt 1
 pop temp 0
-Label L2
+label L2
 push constant 0
 return
 """
@@ -239,7 +239,7 @@ def test_while(tmp_path):
     assert output_path.read_text()=="""function Main.main 0
 push constant 0
 pop local 0
-Label L1
+label L1
 push local 0
 push constant 2
 lt
@@ -253,7 +253,7 @@ push constant 1
 add
 pop local 0
 goto L1
-Label L2
+label L2
 push constant 0
 return
 """
