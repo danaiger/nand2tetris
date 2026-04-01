@@ -105,6 +105,12 @@ class CompilationEngine:
             self._compile_term()
         else:
             if self.tokenizer.token_type() in [TokenType.string_const,TokenType.keyword]:
+                token=self.tokenizer.get_current_token()
+                if token in ["false","null"]:
+                    self.vm_writer.write_push(VMSegment.const,0)
+                elif token=="true":
+                    self.vm_writer.write_push(VMSegment.const,1)
+                    self.vm_writer.write_arithmetic("neg")
                 self._compile_atom_and_advance_repeatedly(1)
             elif self.tokenizer.token_type() in [TokenType.int_const]:
                 number=self.tokenizer.get_current_token()

@@ -36,7 +36,10 @@ class VMWriter:
         self.output_file.write(f"function {name} {n_locals}\n")
 
     def write_arithmetic(self,command:str):
-        self.output_file.write(f"{ArithmeticOpToVMCommand[command]}\n")
+        if command in ArithmeticOpToVMCommand:
+            self.output_file.write(f"{ArithmeticOpToVMCommand[command]}\n")
+        else:
+            self.output_file.write(f"{command}\n")
 
     def write_push(self,segment: VMSegment, index: int):
         self.output_file.write(f"push {segment.value} {index}\n")
