@@ -118,7 +118,7 @@ def test_let(tmp_path):
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
             CompilationEngine(input_file,VMWriter(output_file))
-    assert output_path.read_text()=="""function Main.main 0
+    assert output_path.read_text()=="""function Main.main 1
 push constant 7
 pop local 0
 push constant 0
@@ -207,7 +207,7 @@ def test_expression_with_var(tmp_path):
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
             CompilationEngine(input_file,VMWriter(output_file))
-    assert output_path.read_text()=="""function Main.main 0
+    assert output_path.read_text()=="""function Main.main 1
 push constant 0
 pop local 0
 push local 0
@@ -236,7 +236,7 @@ def test_while(tmp_path):
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
             CompilationEngine(input_file,VMWriter(output_file))
-    assert output_path.read_text()=="""function Main.main 0
+    assert output_path.read_text()=="""function Main.main 1
 push constant 0
 pop local 0
 label L1
@@ -272,7 +272,7 @@ def test_boolean(tmp_path):
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
             CompilationEngine(input_file,VMWriter(output_file))
-    assert output_path.read_text()=="""function Main.main 0
+    assert output_path.read_text()=="""function Main.main 1
 push constant 1
 neg
 pop local 0
@@ -295,10 +295,27 @@ def test_unary_op(tmp_path):
     with open(input_path) as input_file:
         with open(output_path,"w") as output_file:
             CompilationEngine(input_file,VMWriter(output_file))
-    assert output_path.read_text()=="""function Main.main 0
+    assert output_path.read_text()=="""function Main.main 1
 push constant 3
 neg
 pop local 0
+push constant 0
+return
+"""
+
+def test_function_definition_includes_right_number_of_locals(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class Main {
+        function void main(){
+            var int test;
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function Main.main 1
 push constant 0
 return
 """

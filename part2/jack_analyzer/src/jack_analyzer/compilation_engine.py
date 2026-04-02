@@ -14,9 +14,9 @@ IdentifierKindToVMSegment={
 
 def _compilation_unit(name:str):
     def decorator(func):
-        def wrapper(self:CompilationEngine):
+        def wrapper(self:CompilationEngine, *args, **kwargs):
             self.xml_writer.open_compilation_unit(name)
-            value=func(self)
+            value=func(self, *args, **kwargs)
             self.xml_writer.close_compilation_unit(name)
             return value
         return wrapper
@@ -284,10 +284,11 @@ class CompilationEngine:
         self._compile_var_dec()
 
     @_compilation_unit("subroutineBody")
-    def _compile_subroutine_body(self):
+    def _compile_subroutine_body(self,subroutine_name):
         self._compile_atom_and_advance_repeatedly(1)
         while self.tokenizer.get_current_token()=="var":
             self._compile_subroutine_var_dec()
+        self.vm_writer.write_function(f"{self._current_class_name}.{subroutine_name}",self.symbol_table.var_count(IdentifierKind.var))
         self._compile_statements()
         self._compile_atom_and_advance_repeatedly(1)
 
@@ -303,12 +304,11 @@ class CompilationEngine:
             self.tokenizer.advance()
         subroutine_name=self.tokenizer.get_current_token()
         self.xml_writer.write_identifier(subroutine_name,IdentifierKind.subroutine,True)
-        self.vm_writer.write_function(f"{self._current_class_name}.{subroutine_name}",0)
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
         self._compile_parameter_list()
         self._compile_atom_and_advance_repeatedly(1)
-        self._compile_subroutine_body()
+        self._compile_subroutine_body(subroutine_name)
 
     @_compilation_unit("class")
     def compile_class(self):
