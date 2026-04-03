@@ -207,10 +207,10 @@ def test_subroutine_with_parameters_list(tmp_path):
     <symbol> ( </symbol>
     <parameterList>
       <keyword> int </keyword>
-      <identifier arg-definition-0> Ax </identifier arg-definition-0>
+      <identifier arg-definition-1> Ax </identifier arg-definition-1>
       <symbol> , </symbol>
       <keyword> int </keyword>
-      <identifier arg-definition-1> Ay </identifier arg-definition-1>
+      <identifier arg-definition-2> Ay </identifier arg-definition-2>
     </parameterList>
     <symbol> ) </symbol>
     <subroutineBody>

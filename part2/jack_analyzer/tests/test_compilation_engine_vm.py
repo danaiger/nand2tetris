@@ -372,6 +372,33 @@ push local 0
 return
 """
 
+def test_method_definition_arguments(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class Point {
+        field int x,y;
+        
+        method int someMethod(int par){
+            var int somevar;
+            let somevar = x + par;
+            return somevar;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function Point.someMethod 1
+push argument 0
+pop pointer 0
+push this 0
+push argument 1
+add
+pop local 0
+push local 0
+return
+"""
+
+
 
 def test_method_call(tmp_path):
     input_path = tmp_path /"input_file"

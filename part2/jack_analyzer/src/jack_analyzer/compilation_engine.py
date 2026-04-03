@@ -76,7 +76,9 @@ class CompilationEngine:
             self.tokenizer.advance()
 
     @_compilation_unit("parameterList")
-    def _compile_parameter_list(self):
+    def _compile_parameter_list(self,subroutine_type:str):
+        if subroutine_type=='method':
+            self.symbol_table.define("this",self._current_class_name,IdentifierKind.arg)
         if self.tokenizer.get_current_token()==')':
             return
         current_type=self.tokenizer.get_current_token()
@@ -321,7 +323,7 @@ class CompilationEngine:
         self.xml_writer.write_identifier(subroutine_name,IdentifierKind.subroutine,True)
         self.tokenizer.advance()
         self._compile_atom_and_advance_repeatedly(1)
-        self._compile_parameter_list()
+        self._compile_parameter_list(subroutine_type)
         self._compile_atom_and_advance_repeatedly(1)
         self._compile_subroutine_body(subroutine_name,subroutine_type)
 
