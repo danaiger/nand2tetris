@@ -371,3 +371,30 @@ pop local 0
 push local 0
 return
 """
+
+
+def test_method_call(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+        
+        function void someFunc(){
+            var Point p1;
+            let p1 = Point.new();
+            do p1.nothing();
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function SomeClass.someFunc 1
+call Point.new 0
+pop local 0
+push local 0
+call p1.nothing 1
+pop temp 0
+push constant 0
+return
+"""
+

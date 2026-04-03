@@ -235,10 +235,13 @@ class CompilationEngine:
             
     def _compile_subroutine_call_from_end_of_identifier(self,start_of_subroutine):
         subroutine_to_call=start_of_subroutine
+        is_method_call=None
         if self.tokenizer.get_current_token()=='.':
             kind=self.symbol_table.kind_of(start_of_subroutine)
             if kind:
                 self.xml_writer.write_identifier(start_of_subroutine,kind,False,self.symbol_table.index_of(start_of_subroutine))
+                self.vm_writer.write_push(IdentifierKindToVMSegment[kind],0)
+                is_method_call=True
             else:
                 self.xml_writer.write_identifier(start_of_subroutine,IdentifierKind.class_identifier,False)
             self._compile_atom_and_advance_repeatedly(1)
@@ -253,6 +256,8 @@ class CompilationEngine:
         else:
             raise ValueError("wrong syntax")
         parameters_number=self._compile_expression_list()
+        if is_method_call:
+            parameters_number+=1
         self.vm_writer.write_call(subroutine_to_call,parameters_number)
         self._compile_atom_and_advance_repeatedly(1)
 
