@@ -295,6 +295,9 @@ class CompilationEngine:
             self.vm_writer.write_push(VMSegment.const,self.symbol_table.var_count(IdentifierKind.field))
             self.vm_writer.write_call("Memory.alloc",1)
             self.vm_writer.write_pop(VMSegment.pointer,0)
+        elif subroutine_type=='method':
+            self.vm_writer.write_push(VMSegment.arg,0)
+            self.vm_writer.write_pop(VMSegment.pointer,0)
         self._compile_statements()
         self._compile_atom_and_advance_repeatedly(1)
 
