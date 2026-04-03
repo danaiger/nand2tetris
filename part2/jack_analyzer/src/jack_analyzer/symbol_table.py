@@ -33,6 +33,12 @@ class SymbolTable:
             return self.subroutine_level_table[name][3]
         else:
             return self.class_level_table[name][3]
+
+    def type_of(self,name:str)->str:
+        if hasattr(self,"subroutine_level_table") and name in self.subroutine_level_table:
+            return self.subroutine_level_table[name][1]
+        else:
+            return self.class_level_table[name][1]
         
     def kind_of(self,name:str)->VarKind | None:
         if hasattr(self,"subroutine_level_table") and name in self.subroutine_level_table:

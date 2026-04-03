@@ -419,7 +419,7 @@ def test_method_call(tmp_path):
 call Point.new 0
 pop local 0
 push local 0
-call p1.nothing 1
+call Point.nothing 1
 pop temp 0
 push constant 0
 return
