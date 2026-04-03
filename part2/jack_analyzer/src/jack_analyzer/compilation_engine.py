@@ -116,6 +116,8 @@ class CompilationEngine:
                 elif token=="true":
                     self.vm_writer.write_push(VMSegment.const,1)
                     self.vm_writer.write_arithmetic("neg")
+                elif token=="this":
+                    self.vm_writer.write_push(VMSegment.pointer,0)
                 self._compile_atom_and_advance_repeatedly(1)
             elif self.tokenizer.token_type() in [TokenType.int_const]:
                 number=self.tokenizer.get_current_token()
@@ -284,17 +286,22 @@ class CompilationEngine:
         self._compile_var_dec()
 
     @_compilation_unit("subroutineBody")
-    def _compile_subroutine_body(self,subroutine_name):
+    def _compile_subroutine_body(self,subroutine_name,subroutine_type):
         self._compile_atom_and_advance_repeatedly(1)
         while self.tokenizer.get_current_token()=="var":
             self._compile_subroutine_var_dec()
         self.vm_writer.write_function(f"{self._current_class_name}.{subroutine_name}",self.symbol_table.var_count(IdentifierKind.var))
+        if subroutine_type=='constructor':
+            self.vm_writer.write_push(VMSegment.const,self.symbol_table.var_count(IdentifierKind.field))
+            self.vm_writer.write_call("Memory.alloc",1)
+            self.vm_writer.write_pop(VMSegment.pointer,0)
         self._compile_statements()
         self._compile_atom_and_advance_repeatedly(1)
 
     @_compilation_unit("subroutineDec")
     def compile_subroutine_dec(self):
         self.symbol_table.start_subroutine()
+        subroutine_type=self.tokenizer.get_current_token()
         self._compile_atom_and_advance_repeatedly(1)
         current_type=self.tokenizer.get_current_token()
         if current_type in ['char','int','boolean','void']:
@@ -308,7 +315,7 @@ class CompilationEngine:
         self._compile_atom_and_advance_repeatedly(1)
         self._compile_parameter_list()
         self._compile_atom_and_advance_repeatedly(1)
-        self._compile_subroutine_body(subroutine_name)
+        self._compile_subroutine_body(subroutine_name,subroutine_type)
 
     @_compilation_unit("class")
     def compile_class(self):

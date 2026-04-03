@@ -319,3 +319,30 @@ def test_function_definition_includes_right_number_of_locals(tmp_path):
 push constant 0
 return
 """
+
+def test_construction_definition(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class Point {
+        field int x,y;
+        
+        constructor Point new(int ax, int ay){
+            let x = ax;
+            let y = ay;
+            return this;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function Point.new 0
+push constant 2
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push pointer 0
+return
+"""
