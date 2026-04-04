@@ -144,6 +144,8 @@ class CompilationEngine:
                     self.vm_writer.write_push(IdentifierKindToVMSegment[kind],occurence)
                     self._compile_expression()
                     self.vm_writer.write_arithmetic("+")
+                    self.vm_writer.write_pop(VMSegment.pointer,1)
+                    self.vm_writer.write_push(VMSegment.that,0)
                     self._compile_atom_and_advance_repeatedly(1)
                 elif self.tokenizer.get_current_token() in ['(','.']:
                     self._compile_subroutine_call_from_end_of_identifier(name)

@@ -480,7 +480,7 @@ return
 """
 
 
-def test_simple_array_assignment(tmp_path):
+def test_array_assignment(tmp_path):
     input_path = tmp_path /"input_file"
     output_path = tmp_path /"output_file"
     input_path.write_text("""class SomeClass {
@@ -514,6 +514,8 @@ add
 push local 0
 push constant 1
 add
+pop pointer 1
+push that 0
 pop temp 0
 pop pointer 1
 push temp 0
