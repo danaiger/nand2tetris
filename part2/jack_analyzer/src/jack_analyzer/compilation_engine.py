@@ -242,7 +242,7 @@ class CompilationEngine:
             kind=self.symbol_table.kind_of(start_of_subroutine)
             if kind:
                 self.xml_writer.write_identifier(start_of_subroutine,kind,False,self.symbol_table.index_of(start_of_subroutine))
-                self.vm_writer.write_push(IdentifierKindToVMSegment[kind],0)
+                self.vm_writer.write_push(IdentifierKindToVMSegment[kind],self.symbol_table.index_of(start_of_subroutine))
                 is_method_call=True
                 subroutine_to_call=self.symbol_table.type_of(start_of_subroutine)
             else:
@@ -256,6 +256,8 @@ class CompilationEngine:
         elif self.tokenizer.get_current_token()=='(':
             self.xml_writer.write_identifier(start_of_subroutine,IdentifierKind.subroutine,False)
             subroutine_to_call=f"{self._current_class_name}.{start_of_subroutine}"
+            self.vm_writer.write_push(VMSegment.pointer,0)
+            is_method_call=True
             self._compile_atom_and_advance_repeatedly(1)
         else:
             raise ValueError("wrong syntax")
