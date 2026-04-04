@@ -446,3 +446,78 @@ pop temp 0
 push constant 0
 return
 """
+
+
+def test_simple_array_assignment(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+        
+        function void someFunc(){
+            var Array a;
+            let a = Array.new(3);
+            let a[1]=2;
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function SomeClass.someFunc 1
+push constant 3
+call Array.new 1
+pop local 0
+push local 0
+push constant 1
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+"""
+
+
+def test_simple_array_assignment(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+        
+        function void someFunc(){
+            var Array a;
+            let a = Array.new(3);
+            let a[1]=2;
+            let a[2]=a[1];
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function SomeClass.someFunc 1
+push constant 3
+call Array.new 1
+pop local 0
+push local 0
+push constant 1
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 2
+add
+push local 0
+push constant 1
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+"""
