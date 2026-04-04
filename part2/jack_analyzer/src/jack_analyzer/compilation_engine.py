@@ -129,8 +129,9 @@ class CompilationEngine:
                 token=self.tokenizer.get_current_token()[1:-1]
                 self.vm_writer.write_push(VMSegment.const,len(token))
                 self.vm_writer.write_call("String.new",1)
-                self.vm_writer.write_push(VMSegment.const,ord(token[0]))
-                self.vm_writer.write_call("String.appendChar",2)
+                for char in token:
+                    self.vm_writer.write_push(VMSegment.const,ord(char))
+                    self.vm_writer.write_call("String.appendChar",2)
                 self._compile_atom_and_advance_repeatedly(1)
             else:
                 name=self.tokenizer.get_current_token()
