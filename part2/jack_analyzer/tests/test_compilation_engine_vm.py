@@ -425,3 +425,24 @@ push constant 0
 return
 """
 
+
+def test_function_call_without_class_name_is_compiled_as_method(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+        
+        function void someFunc(){
+            do nothing();
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()=="""function SomeClass.someFunc 0
+push pointer 0
+call SomeClass.nothing 1
+pop temp 0
+push constant 0
+return
+"""
