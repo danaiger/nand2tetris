@@ -521,3 +521,27 @@ pop that 0
 push constant 0
 return
 """
+
+def test_string_of_one_char_assignment(tmp_path):
+    input_path = tmp_path /"input_file"
+    output_path = tmp_path /"output_file"
+    input_path.write_text("""class SomeClass {
+        
+        function void someFunc(){
+            var String a;
+            let a = "A";
+            return;
+                      }
+                          }""")
+    with open(input_path) as input_file:
+        with open(output_path,"w") as output_file:
+            CompilationEngine(input_file,VMWriter(output_file))
+    assert output_path.read_text()==f"""function SomeClass.someFunc 1
+push constant 1
+call String.new 1
+push constant {ord("A")}
+call String.appendChar 2
+pop local 0
+push constant 0
+return
+"""

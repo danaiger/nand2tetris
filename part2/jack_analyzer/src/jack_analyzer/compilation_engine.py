@@ -111,7 +111,7 @@ class CompilationEngine:
             else:
                 self.vm_writer.write_arithmetic('~')
         else:
-            if self.tokenizer.token_type() in [TokenType.string_const,TokenType.keyword]:
+            if self.tokenizer.token_type() in [TokenType.keyword]:
                 token=self.tokenizer.get_current_token()
                 if token in ["false","null"]:
                     self.vm_writer.write_push(VMSegment.const,0)
@@ -124,6 +124,13 @@ class CompilationEngine:
             elif self.tokenizer.token_type() in [TokenType.int_const]:
                 number=self.tokenizer.get_current_token()
                 self.vm_writer.write_push(VMSegment.const,number)
+                self._compile_atom_and_advance_repeatedly(1)
+            elif self.tokenizer.token_type() in [TokenType.string_const]:
+                token=self.tokenizer.get_current_token()[1:-1]
+                self.vm_writer.write_push(VMSegment.const,len(token))
+                self.vm_writer.write_call("String.new",1)
+                self.vm_writer.write_push(VMSegment.const,ord(token[0]))
+                self.vm_writer.write_call("String.appendChar",2)
                 self._compile_atom_and_advance_repeatedly(1)
             else:
                 name=self.tokenizer.get_current_token()
