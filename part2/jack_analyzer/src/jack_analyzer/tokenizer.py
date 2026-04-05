@@ -120,7 +120,7 @@ class JackTokenizer:
         next_char=self._peek()
         if next_char=='/' and not self._is_comment():
             return
-        if next_char in [' ','\n','/']:
+        if next_char in [' ','\n','/','\t']:
             self._advance_to_begin_char()
         
     def _skip_empty_chars(self)->None:

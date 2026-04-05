@@ -45,3 +45,7 @@ class JackAnalyzer:
         elif self.path.is_dir():
             for file in self.path.glob("*.jack"):
                 self._analyze_file(file)
+
+if __name__ == "__main__":
+    import sys
+    JackAnalyzer(Path(sys.argv[1])).analyze()

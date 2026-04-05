@@ -211,3 +211,16 @@ def test_identifier_then_symbol(tmp_path,symbol):
         tokenizer.advance()
         assert tokenizer.get_current_token()==symbol
         assert tokenizer.token_type()==TokenType.symbol
+        
+
+
+def test_tab_after_inline_comment(tmp_path):
+    file = tmp_path /"File.jack"
+    file.write_text(""" sometext    // -6 for ball size
+\t someothertext """)
+    with open(file) as f:
+        tokenizer=JackTokenizer(f)
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=="sometext" 
+        tokenizer.advance()
+        assert tokenizer.get_current_token()=="someothertext" 
