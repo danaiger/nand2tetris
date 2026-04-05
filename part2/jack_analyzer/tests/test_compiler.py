@@ -6,7 +6,7 @@ from jack_analyzer.compiler import JackCompiler
 TEST_DIR=Path("tests/test_data/Compiler")
 
 
-@pytest.mark.parametrize("dir_name", ["Seven","ConvertToBin","Square","Average"])
+@pytest.mark.parametrize("dir_name", ["Seven","ConvertToBin","Square","Average","Pong","ComplexArrays"])
 def test_dirs_analyzed_as_expected(dir_name, tmp_path):
     current_dir = TEST_DIR / dir_name
     expected_dir = current_dir / "expected"
